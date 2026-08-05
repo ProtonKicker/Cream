@@ -1,5 +1,7 @@
 # Beam Klipper - Klipper for Android
 
+**Read this in other languages: [English](README.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)**
+
 Beam Klipper allows you to run [Klipper](https://github.com/KevinOConnor/klipper) host software (Klippy) on any Android 5.0+ device with OTG support.
 
 # Quick start
