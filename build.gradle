@@ -1,0 +1,40 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.10.0'
+        classpath 'com.chaquo.python:gradle:15.0.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24'
+    }
+}
+repositories {
+    google()
+}
+
+// Keep submodule working trees (notably EventBus) clean from any locally
+// generated legacy Java annotation-processor outputs that would otherwise
+// surface as "submodule changes" in the parent repository. This runs on
+// every Gradle invocation and never requires editing the submodule itself.
+def ensureSubmoduleExcludes = {
+    def script = rootProject.file("scripts/ensure_submodule_excludes.sh")
+    if (!script.exists()) return
+    try {
+        def proc = ["bash", script.absolutePath].execute(null, rootProject.projectDir)
+        proc.consumeProcessOutput()
+        proc.waitFor()
+    } catch (Exception ignored) {
+    }
+}
+ensureSubmoduleExcludes.call()
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}

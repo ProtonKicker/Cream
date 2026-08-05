@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/creamPrimary</item>
+        <item name="colorOnPrimary">@color/creamOnPrimary</item>
+        <item name="colorPrimaryContainer">@color/surfaceCreamContainer</item>
+        <item name="colorOnPrimaryContainer">@color/textColorOnCream</item>
+        <item name="colorSurface">@color/windowBackground</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceCream</item>
+        <item name="colorSurfaceContainer">@color/snippetSurface</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceCreamContainer</item>
+
+        <item name="cardOutlineColor">@color/cardOutlineColor</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="dividerColor">@color/dividerColor</item>
+        <item name="navbarColor">@color/navigationBarColor</item>
+        <item name="android:colorAccent">@color/creamPrimary</item>
+        <item name="textColorOnAccent">@color/creamOnPrimary</item>
+        <item name="dialogBackground">@color/windowBackground</item>
+        <item name="startStopButtonForegroundColor">@color/creamOnPrimary</item>
+        <item name="startStopButtonColor_0">@color/creamPrimary</item>
+        <item name="startStopButtonColor_1">#D4A574</item>
+        <item name="startStopButtonColor_2">#E5C07B</item>
+        <item name="startStopButtonColor_3">#C49A6C</item>
+        <item name="startStopButtonColor_4">#B8860B</item>
+        <item name="startStopButtonColor_5">#8FBC8F</item>
+        <item name="startStopButtonColor_6">#CD853F</item>
+        <item name="startStopButtonColor_7">#D2691E</item>
+        <item name="startStopButtonColor_8">#A0522D</item>
+        <item name="startStopButtonColor_9">#DEB887</item>
+        <item name="textColorDanger">#C0392B</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/navigationBarColor</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@color/windowBackground</item>
+        <item name="bottomSheetStyle">@style/AppBottomSheet</item>
+        <item name="colorPrimary">@color/creamPrimary</item>
+        <item name="colorSecondary">@color/creamPrimary</item>
+    </style>
+
+    <style name="AppBottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@color/windowBackground</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeTopRight">32dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="SnippetCard">
+        <item name="android:background">@color/snippetSurface</item>
+    </style>
+</resources>

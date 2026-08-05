@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="creamPrimary">#E9C77B</color>
+    <color name="creamPrimaryDark">#DAB45F</color>
+    <color name="creamPrimaryLight">#F2DCA3</color>
+    <color name="creamOnPrimary">#3D2E00</color>
+
+    <color name="surfaceCream">#FFF2D8</color>
+    <color name="surfaceCreamContainer">#F7E3B2</color>
+    <color name="cardOutlineColor">#05000000</color>
+    <color name="navigationBarColor">#FFF2D8</color>
+    <color name="windowBackground">#FFF7E5</color>
+    <color name="dividerColor">#0B000000</color>
+    <color name="snippetSurface">#F8E9C4</color>
+    <color name="snippetOutline">#12E9C77B</color>
+
+    <color name="textColorOnCream">#4A3A10</color>
+    <color name="textColorOnCreamSecondary">#7A6B45</color>
+</resources>

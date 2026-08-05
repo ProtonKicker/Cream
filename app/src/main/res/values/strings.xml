@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="AppName" translatable="false">Beam Klipper</string>
+    <string name="InstanceN">%s</string>
+    <string name="ServicesChannel">Services</string>
+    <string name="KlippyTitle">Klippy (%s)</string>
+    <string name="KlippyDescription">Klippy is running in background…</string>
+    <string name="MoonrakerTitle">Moonraker (%s)</string>
+    <string name="MoonrakerDescription">Moonraker is running in background…</string>
+    <string name="WebTitle">Web server</string>
+    <string name="WebDescription">Web server is running in background…</string>
+    <string name="CameraTitle">Camera server</string>
+    <string name="CameraDescription">Camera server is running in background…</string>
+    <string name="BatteryOptimizationExclusion">Battery optimization exclusion</string>
+    <string name="Notifications">Notifications</string>
+    <string name="HideNotificationsChannel">Hide notifications channel</string>
+    <string name="HideNotificationsChannelInfo">You need to disable «%s» channel</string>
+    <string name="NotOnSdcard">App is not broken by installing on SD Card</string>
+    <string name="NotOnSdcardInfo">App can\'t work on SD Card</string>
+    <string name="Next">Next</string>
+    <string name="Instances">Profiles</string>
+    <string name="InstanceStarting">Starting…</string>
+    <string name="InstanceStopping">Stopping…</string>
+    <string name="InstanceName">Name</string>
+    <string name="InstanceConfig">Config</string>
+    <string name="InstanceCreate">Create</string>
+    <string name="InstanceConfigHint">Tap to select a config file…</string>
+    <string name="InstanceDelete">Delete «%s»?</string>
+    <string name="InstanceDeleteConfirm">Are you sure?</string>
+    <string name="InstanceOK">OK</string>
+    <string name="NewInstance">New profile</string>
+    <string name="EditInstance">Edit profile</string>
+    <string name="EditOpenDirectory">Open profile folder</string>
+    <string name="NoFreeSlots">No free slots</string>
+    <string name="NoFreeSlotsDescription">Only up to %d profiles can be running at the same time</string>
+    <string name="Error">Error</string>
+    <string name="ErrorNameEmpty">Name can not be empty</string>
+    <string name="ErrorConfigEmpty">Select a config</string>
+    <string name="Settings">Settings</string>
+    <string name="Camera">Camera</string>
+    <string name="EnableCamera">Enable camera server</string>
+    <string name="USB" translatable="false">USB</string>
+    <string name="ListUSB">List USB devices</string>
+    <string name="ListUSBTitle">USB devices</string>
+    <string name="ListUSBNoDevices">USB devices not found</string>
+    <string name="USBDeviceNaming">Device naming</string>
+    <string name="USBDeviceNamingByPath">By path</string>
+    <string name="USBDeviceNamingByVidPid">By VID/PID</string>
+    <string name="Autostart">Autostart</string>
+    <string name="Fluidd" translatable="false">Fluidd</string>
+    <string name="Mainsail" translatable="false">Mainsail</string>
+    <string name="Kalico" translatable="false">Kalico</string>
+    <string name="Klipper" translatable="false">Klipper</string>
+    <string name="IPInfo" translatable="false">http://%s:%d/</string>
+    <string name="General">General</string>
+    <string name="WebFrontend">Web frontend</string>
+    <string name="FirmwareEngine">Firmware engine</string>
+    <string name="EngineNotBundled">Kalico files are not installed yet. Build and reopen the app to use this engine.</string>
+    <string name="EngineRestartRequired">Restart running profiles for the firmware engine change to take effect.</string>
+    <string name="AppLanguage">App language</string>
+    <string name="LanguageSystem">Follow system</string>
+    <string name="LanguageEnglish">English</string>
+    <string name="LanguageRussian">Русский</string>
+    <string name="LanguageChineseSimplified">简体中文</string>
+    <string name="LanguageChineseTraditional">繁體中文</string>
+    <string name="SystemSettings">System settings</string>
+    <string name="Other">Other</string>
+    <string name="OtherGetFirmware">Get MCU firmware</string>
+    <string name="No">No</string>
+    <string name="Yes">Yes</string>
+    <string name="ErrorTryLater">Error. Please try again later.</string>
+    <string name="QRCode">QR Code</string>
+    <string name="QRCopy">Copy link</string>
+    <string name="QROpen">Open link</string>
+    <string name="QRCancel">Cancel</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Changelog">Changelog</string>
+    <string name="ChangelogNext">Next</string>
+    <string name="ChangelogOK">OK</string>
+
+    <string name="AppTheme">App theme</string>
+    <string name="ThemeSystem">Follow system</string>
+    <string name="ThemeLight">Light</string>
+    <string name="ThemeDark">Dark</string>
+
+    <string name="HelpTitle">Help &amp; About</string>
+    <string name="About">About Beam Klipper</string>
+    <string name="IntroTitle">How to use</string>
+    <string name="IntroText">Beam Klipper turns your Android phone into a self-contained Klipper or Kalico 3D-printer control unit.\n\n1. Tap \"+\" to create a printer profile and pick a Klipper config template.\n2. Tap the cream Run button to start the engine, Moonraker, and the web UI server.\n3. Open Fluidd or Mainsail through the web card to control your printer.\n4. Use the settings drawer to switch engines (Klipper/Kalico), frontends, language, and theme.\n\nAll processing happens locally on your device — no cloud required.</string>
+    <string name="GitHubRepo">GitHub repository</string>
+    <string name="AppSettings">App settings</string>
+    <string name="EngineFrontend">Engine &amp; Frontend</string>
+    <string name="QuickStart">Quick start</string>
+    <string name="PrivacyNote">Everything runs on your device. No data leaves your phone.</string>
+    <string name="SelectIcon">Choose an icon</string>
+    <string name="Done">Done</string>
+</resources>
