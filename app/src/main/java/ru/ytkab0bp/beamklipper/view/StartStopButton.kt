@@ -15,8 +15,8 @@ import ru.ytkab0bp.beamklipper.utils.ViewUtils
 
 class StartStopButton : AppCompatImageView {
     companion object {
-        private const val DEFAULT_RADIUS = 30
-        private const val MIN_RADIUS = 14
+        private const val DEFAULT_RADIUS = 24
+        private const val MIN_RADIUS = 11
     }
 
     private val backgroundPaint = Paint()

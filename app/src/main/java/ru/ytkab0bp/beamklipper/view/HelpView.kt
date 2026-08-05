@@ -35,6 +35,7 @@ class HelpView(context: Context) : FrameLayout(context) {
     private var progress = 0f
     internal val header: LinearLayout
     private val title: TextView
+    private lateinit var scrollView: androidx.core.widget.NestedScrollView
 
     init {
         dimmPaint.color = Color.BLACK
@@ -71,7 +72,7 @@ class HelpView(context: Context) : FrameLayout(context) {
             insets
         }
 
-        val scrollView = androidx.core.widget.NestedScrollView(context).apply {
+        scrollView = androidx.core.widget.NestedScrollView(context).apply {
             overScrollMode = View.OVER_SCROLL_NEVER
             isFillViewport = true
         }
@@ -128,6 +129,26 @@ class HelpView(context: Context) : FrameLayout(context) {
         }
         (privacyTv.background as? android.graphics.drawable.GradientDrawable)?.cornerRadius = ViewUtils.dp(16).toFloat()
         content.addView(privacyTv, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            bottomMargin = ViewUtils.dp(28)
+        })
+
+        val creditsTitle = TextView(context).apply {
+            setText(R.string.CreditsTitle)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            setTextColor(ViewUtils.resolveColor(context, android.R.attr.textColorPrimary))
+            typeface = ViewUtils.getTypeface(ViewUtils.ROBOTO_MEDIUM)
+        }
+        content.addView(creditsTitle, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            bottomMargin = ViewUtils.dp(12)
+        })
+
+        val creditsTv = TextView(context).apply {
+            setText(R.string.CreditsText)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            setTextColor(ViewUtils.resolveColor(context, android.R.attr.textColorPrimary))
+            setLineSpacing(ViewUtils.dp(4).toFloat(), 1f)
+        }
+        content.addView(creditsTv, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             bottomMargin = ViewUtils.dp(32)
         })
 
@@ -146,8 +167,12 @@ class HelpView(context: Context) : FrameLayout(context) {
             style = Paint.Style.STROKE
             strokeWidth = ViewUtils.dp(0.5f).toFloat()
         }
-        addRow(content, R.string.GitHubRepo, R.drawable.ic_github_28, false) {
+        addRow(content, R.string.OriginalBeamKlipper, R.drawable.ic_external_link_outline_24, true) {
             val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/utkabobr/BeamKlipper"))
+            context.startActivity(i)
+        }
+        addRow(content, R.string.GitHubRepo, R.drawable.ic_github_28, false) {
+            val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ProtonKicker/Cream"))
             context.startActivity(i)
         }
 
@@ -250,7 +275,11 @@ class HelpView(context: Context) : FrameLayout(context) {
     }
 
     fun setProgress(progress: Float) {
+        val prev = this.progress
         this.progress = progress
+        if (prev < 1f && progress >= 1f) {
+            scrollView.post { scrollView.scrollTo(0, 0) }
+        }
         invalidateProgress()
         invalidate()
     }

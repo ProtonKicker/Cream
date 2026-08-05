@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="creamPrimary">#E9C77B</color>
-    <color name="creamPrimaryDark">#DAB45F</color>
-    <color name="creamPrimaryLight">#F2DCA3</color>
-    <color name="creamOnPrimary">#3D2E00</color>
+    <color name="creamPrimary">#F2DA9C</color>
+    <color name="creamPrimaryDark">#DCC07A</color>
+    <color name="creamPrimaryLight">#FAECC2</color>
+    <color name="creamOnPrimary">#3B2C05</color>
 
-    <color name="surfaceCream">#FFF2D8</color>
-    <color name="surfaceCreamContainer">#F7E3B2</color>
-    <color name="cardOutlineColor">#05000000</color>
-    <color name="navigationBarColor">#FFF2D8</color>
-    <color name="windowBackground">#FFF7E5</color>
-    <color name="dividerColor">#0B000000</color>
-    <color name="snippetSurface">#F8E9C4</color>
-    <color name="snippetOutline">#12E9C77B</color>
+    <color name="surfaceCream">#FFF1CE</color>
+    <color name="surfaceCreamContainer">#F6DEA3</color>
+    <color name="cardOutlineColor">#00000000</color>
+    <color name="navigationBarColor">#FFF8E6</color>
+    <color name="windowBackground">#FFF8E6</color>
+    <color name="dividerColor">#0D000000</color>
+    <color name="snippetSurface">#FAE6B0</color>
+    <color name="snippetOutline">#14F2DA9C</color>
 
-    <color name="textColorOnCream">#4A3A10</color>
-    <color name="textColorOnCreamSecondary">#7A6B45</color>
+    <color name="textColorOnCream">#4A3910</color>
+    <color name="textColorOnCreamSecondary">#7C6C47</color>
+    <color name="creamSurfaceHighest">#FAECC2</color>
 </resources>

@@ -7,7 +7,7 @@
         <item name="colorOnPrimaryContainer">@color/textColorOnCream</item>
         <item name="colorSecondary">@color/creamPrimaryLight</item>
         <item name="colorOnSecondary">@color/creamOnPrimary</item>
-        <item name="colorSecondaryContainer">@color/creamPrimaryLight</item>
+        <item name="colorSecondaryContainer">@color/creamPrimaryDark</item>
         <item name="colorOnSecondaryContainer">@color/textColorOnCream</item>
         <item name="colorTertiary">@color/creamPrimaryDark</item>
         <item name="colorOnTertiary">@color/creamOnPrimary</item>
@@ -31,26 +31,27 @@
         <item name="navbarColor">@color/navigationBarColor</item>
         <item name="android:colorAccent">@color/creamPrimary</item>
         <item name="textColorOnAccent">@color/creamOnPrimary</item>
-        <item name="dialogBackground">@color/windowBackground</item>
+        <item name="dialogBackground">@color/surfaceCreamContainer</item>
         <item name="startStopButtonForegroundColor">@color/creamOnPrimary</item>
-        <item name="startStopButtonColor_0">@color/creamPrimary</item>
-        <item name="startStopButtonColor_1">#E8CB88</item>
-        <item name="startStopButtonColor_2">#EED69A</item>
-        <item name="startStopButtonColor_3">#D4BA70</item>
-        <item name="startStopButtonColor_4">#F0DDA8</item>
-        <item name="startStopButtonColor_5">#E0C682</item>
-        <item name="startStopButtonColor_6">#F2DCA5</item>
-        <item name="startStopButtonColor_7">#DAC47C</item>
-        <item name="startStopButtonColor_8">#E8D092</item>
-        <item name="startStopButtonColor_9">#F0DBA0</item>
-        <item name="textColorDanger">#C0392B</item>
+        <item name="startStopButtonColor_0">#E2C47E</item>
+        <item name="startStopButtonColor_1">#D6B56A</item>
+        <item name="startStopButtonColor_2">#EBD294</item>
+        <item name="startStopButtonColor_3">#C8A555</item>
+        <item name="startStopButtonColor_4">#EED79A</item>
+        <item name="startStopButtonColor_5">#DBBA72</item>
+        <item name="startStopButtonColor_6">#F0D99C</item>
+        <item name="startStopButtonColor_7">#C39F51</item>
+        <item name="startStopButtonColor_8">#E6CD89</item>
+        <item name="startStopButtonColor_9">#EBD395</item>
+        <item name="textColorDanger">#E06B6B</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
-    <style name="BottomSheetDialogTheme" parent="Theme.Material3.Light.BottomSheetDialog">
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.Dark.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:navigationBarColor">@color/windowBackground</item>
         <item name="bottomSheetStyle">@style/AppBottomSheet</item>
@@ -59,7 +60,7 @@
     </style>
 
     <style name="AppBottomSheet" parent="Widget.Material3.BottomSheet">
-        <item name="backgroundTint">@color/windowBackground</item>
+        <item name="backgroundTint">@color/creamSurfaceHighest</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
     </style>
 

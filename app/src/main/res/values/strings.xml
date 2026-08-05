@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName" translatable="false">Beam Klipper</string>
+    <string name="AppName" translatable="false">Cream</string>
     <string name="InstanceN">%s</string>
     <string name="ServicesChannel">Services</string>
     <string name="KlippyTitle">Klippy (%s)</string>
@@ -84,10 +84,13 @@
     <string name="ThemeDark">Dark</string>
 
     <string name="HelpTitle">Help &amp; About</string>
-    <string name="About">About Beam Klipper</string>
+    <string name="About">About Cream</string>
     <string name="IntroTitle">How to use</string>
-    <string name="IntroText">Beam Klipper turns your Android phone into a self-contained Klipper or Kalico 3D-printer control unit.\n\n1. Tap \"+\" to create a printer profile and pick a Klipper config template.\n2. Tap the cream Run button to start the engine, Moonraker, and the web UI server.\n3. Open Fluidd or Mainsail through the web card to control your printer.\n4. Use the settings drawer to switch engines (Klipper/Kalico), frontends, language, and theme.\n\nAll processing happens locally on your device — no cloud required.</string>
+    <string name="IntroText">Cream turns your Android phone into a self-contained Klipper or Kalico 3D-printer control unit.\n\n1. Tap \"+\" to create a printer profile and pick a Klipper config template.\n2. Tap the cream Run button to start the engine, Moonraker, and the web UI server.\n3. Open Fluidd or Mainsail through the web card to control your printer.\n4. Use the settings drawer to switch engines (Klipper/Kalico), frontends, language, and theme.\n\nAll processing happens locally on your device — no cloud required.</string>
     <string name="GitHubRepo">GitHub repository</string>
+    <string name="OriginalBeamKlipper">Original: Beam Klipper by utkabobr</string>
+    <string name="CreditsTitle">Credits</string>
+    <string name="CreditsText">Cream is a heavily-themed Kotlin hardfork of Beam Klipper, originally created by utkabobr. Without his work this app would not exist.</string>
     <string name="AppSettings">App settings</string>
     <string name="EngineFrontend">Engine &amp; Frontend</string>
     <string name="QuickStart">Quick start</string>

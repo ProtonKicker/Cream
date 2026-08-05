@@ -262,13 +262,13 @@ class MainActivity : AppCompatActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
         }
-        val gap = ViewUtils.dp(40)
+        val gap = ViewUtils.dp(32)
 
         addButton = buildBigCreamButton(R.drawable.ic_add_outline_28).apply {
             setOnClickListener { InstanceEditorBottomSheet.show(this@MainActivity, null) }
         }
         addIcon = (addButton.getChildAt(0) as FrameLayout).getChildAt(0) as ImageView
-        bottomRow.addView(addButton, LinearLayout.LayoutParams(ViewUtils.dp(108), ViewUtils.dp(108)).apply {
+        bottomRow.addView(addButton, LinearLayout.LayoutParams(ViewUtils.dp(92), ViewUtils.dp(92)).apply {
             marginEnd = gap
         })
 
@@ -276,18 +276,18 @@ class MainActivity : AppCompatActivity() {
             setOnClickListener { runStopAll() }
         }
         runStopIcon = (runStopButton.getChildAt(0) as FrameLayout).getChildAt(0) as ImageView
-        bottomRow.addView(runStopButton, LinearLayout.LayoutParams(ViewUtils.dp(108), ViewUtils.dp(108)))
+        bottomRow.addView(runStopButton, LinearLayout.LayoutParams(ViewUtils.dp(92), ViewUtils.dp(92)))
 
         bottomButtonsWrap.addView(bottomRow, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
 
         mainPage.addView(bottomButtonsWrap, FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewUtils.dp(108),
+            ViewUtils.dp(92),
             Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
         ).apply {
             leftMargin = ViewUtils.dp(24)
             rightMargin = ViewUtils.dp(24)
-            bottomMargin = ViewUtils.dp(60)
+            bottomMargin = ViewUtils.dp(56)
         })
 
         mainPage.addView(badgesLayout, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -298,10 +298,10 @@ class MainActivity : AppCompatActivity() {
                 ViewUtils.dp(20) + insets.systemWindowInsetLeft,
                 contentPaddingTop + insets.systemWindowInsetTop,
                 ViewUtils.dp(20) + insets.systemWindowInsetRight,
-                ViewUtils.dp(180) + insets.systemWindowInsetBottom
+                ViewUtils.dp(168) + insets.systemWindowInsetBottom
             )
             val lp = bottomButtonsWrap.layoutParams as FrameLayout.LayoutParams
-            lp.bottomMargin = ViewUtils.dp(60) + insets.systemWindowInsetBottom
+            lp.bottomMargin = ViewUtils.dp(56) + insets.systemWindowInsetBottom
             lp.leftMargin = ViewUtils.dp(24) + insets.systemWindowInsetLeft
             lp.rightMargin = ViewUtils.dp(24) + insets.systemWindowInsetRight
             bottomButtonsWrap.layoutParams = lp
@@ -335,7 +335,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun buildBigCreamButton(iconRes: Int): MaterialCardView {
         val card = MaterialCardView(this).apply {
-            radius = ViewUtils.dp(32).toFloat()
+            radius = ViewUtils.dp(28).toFloat()
             cardElevation = 0f
             strokeWidth = 0
             setCardBackgroundColor(ViewUtils.resolveColor(this@MainActivity, R.attr.colorPrimary))
@@ -350,7 +350,7 @@ class MainActivity : AppCompatActivity() {
             )
             scaleType = ImageView.ScaleType.FIT_CENTER
         }
-        f.addView(iv, FrameLayout.LayoutParams(ViewUtils.dp(54), ViewUtils.dp(54), Gravity.CENTER))
+        f.addView(iv, FrameLayout.LayoutParams(ViewUtils.dp(44), ViewUtils.dp(44), Gravity.CENTER))
         card.addView(f, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         return card
     }

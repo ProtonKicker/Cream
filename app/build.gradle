@@ -129,7 +129,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "BeamKlipper_" + commit + ".apk"
+            outputFileName = "Cream_" + commit + ".apk"
         }
     }
 }

@@ -89,8 +89,8 @@ class KlipperInstanceView(context: Context) : LinearLayout(context) {
         })
 
         startStopButton = StartStopButton(context).apply {
-            setPadding(ViewUtils.dp(8), ViewUtils.dp(8), ViewUtils.dp(8), ViewUtils.dp(8))
-            layoutParams = LayoutParams(ViewUtils.dp(28 + 12), ViewUtils.dp(28 + 12))
+            setPadding(ViewUtils.dp(7), ViewUtils.dp(7), ViewUtils.dp(7), ViewUtils.dp(7))
+            layoutParams = LayoutParams(ViewUtils.dp(34), ViewUtils.dp(34))
         }
         addView(startStopButton)
     }

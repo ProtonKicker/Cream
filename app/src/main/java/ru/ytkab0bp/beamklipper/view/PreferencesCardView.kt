@@ -60,6 +60,7 @@ class PreferencesCardView(context: Context) : FrameLayout(context) {
     private lateinit var engineValueView: TextView
     private lateinit var cameraSwitch: PreferenceSwitchView
     private lateinit var usbNamingValueView: TextView
+    private lateinit var scrollView: NestedScrollView
 
     init {
         dimmPaint.color = Color.BLACK
@@ -107,7 +108,7 @@ class PreferencesCardView(context: Context) : FrameLayout(context) {
     private fun buildMainSettingsPage() {
         contentContainer.removeAllViews()
 
-        val scrollView = NestedScrollView(context).apply {
+        scrollView = NestedScrollView(context).apply {
             overScrollMode = View.OVER_SCROLL_NEVER
             isFillViewport = true
         }
@@ -211,7 +212,7 @@ class PreferencesCardView(context: Context) : FrameLayout(context) {
             })
         }
         row4.addView(buildSnippetCard(
-            R.drawable.ic_cloud_plus_outline_28,
+            R.drawable.ic_mcu_firmware_outline_28,
             R.string.OtherGetFirmware,
             null,
             { QRCodeAlertDialog(context, "https://github.com/utkabobr/klipper/releases/tag/prebuilt-v0.12.0").show() }
@@ -292,7 +293,7 @@ class PreferencesCardView(context: Context) : FrameLayout(context) {
     private fun buildAppSettingsPage() {
         contentContainer.removeAllViews()
 
-        val scrollView = NestedScrollView(context).apply {
+        scrollView = NestedScrollView(context).apply {
             overScrollMode = View.OVER_SCROLL_NEVER
             isFillViewport = true
         }
@@ -733,7 +734,11 @@ class PreferencesCardView(context: Context) : FrameLayout(context) {
     }
 
     fun setProgress(progress: Float) {
+        val prev = this.progress
         this.progress = progress
+        if (prev < 1f && progress >= 1f) {
+            scrollView.post { scrollView.scrollTo(0, 0) }
+        }
         invalidateProgress()
         invalidate()
     }
