@@ -146,6 +146,15 @@ class KlipperInstance {
                 onMoonrakerUnbound()
                 try { nm.cancel(BaseMoonrakerService.BASE_ID + slot) } catch (_: Throwable) {}
             }
+            klippyConnected = false
+            moonrakerConnected = false
+            klippyConnection = null
+            moonrakerConnection = null
+            klippyIntent = null
+            moonrakerIntent = null
+            if (state == State.STOPPING) {
+                notifyStateChanged(State.IDLE)
+            }
         }
     }
 
@@ -317,8 +326,19 @@ class KlipperInstance {
         @JvmStatic
         fun isWebServerRunning(): Boolean = webServerConnection != null
 
+        private fun hasAnyRunningInstance(): Boolean {
+            for (inst in slots.keys) {
+                val s = inst.getState()
+                if (s == State.RUNNING || s == State.STARTING || s == State.STOPPING) {
+                    return true
+                }
+            }
+            return false
+        }
+
         private fun stopServerServicesIfNoSlots() {
-            if (slots.isNotEmpty()) return
+            if (hasAnyRunningInstance()) return
+            slots.clear()
             if (webServerConnection != null) {
                 KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.STOPPING))
                 try { KlipperApp.INSTANCE.unbindService(webServerConnection!!) } catch (_: Throwable) {}
