@@ -51,6 +51,29 @@ add_library(klippy_chelper
         src/main/klipper/klippy/chelper/trdispatch.c
 )
 
+add_library(kalico_chelper
+        SHARED
+        src/main/kalico/klippy/chelper/itersolve.c
+        src/main/kalico/klippy/chelper/kin_cartesian.c
+        src/main/kalico/klippy/chelper/kin_corexy.c
+        src/main/kalico/klippy/chelper/kin_corexz.c
+        src/main/kalico/klippy/chelper/kin_delta.c
+        src/main/kalico/klippy/chelper/kin_deltesian.c
+        src/main/kalico/klippy/chelper/kin_extruder.c
+        src/main/kalico/klippy/chelper/kin_polar.c
+        src/main/kalico/klippy/chelper/kin_idex.c
+        src/main/kalico/klippy/chelper/kin_rotary_delta.c
+        src/main/kalico/klippy/chelper/kin_shaper.c
+        src/main/kalico/klippy/chelper/kin_winch.c
+        src/main/kalico/klippy/chelper/msgblock.c
+        src/main/kalico/klippy/chelper/pollreactor.c
+        src/main/kalico/klippy/chelper/pyhelper.c
+        src/main/kalico/klippy/chelper/serialqueue.c
+        src/main/kalico/klippy/chelper/stepcompress.c
+        src/main/kalico/klippy/chelper/trapq.c
+        src/main/kalico/klippy/chelper/trdispatch.c
+)
+
 target_link_libraries(
         serial
         ${log-lib})

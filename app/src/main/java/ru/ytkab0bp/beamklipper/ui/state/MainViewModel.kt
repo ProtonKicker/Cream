@@ -67,6 +67,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun delete(instance: KlipperInstance) {
+        instance.stop()
         viewModelScope.launch(Dispatchers.IO) {
             KlipperApp.DATABASE.delete(instance)
         }

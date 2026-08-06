@@ -40,7 +40,7 @@ SOURCE_FILES = [
     "kin_shaper.c",
     "kin_idex.c",
 ]
-DEST_LIB = "c_helper.so"
+DEST_LIB = "${DEST_LIB}"
 OTHER_FILES = [
     "list.h",
     "serialqueue.h",
@@ -322,16 +322,7 @@ def get_ffi():
     global FFI_main, FFI_lib, pyhelper_logging_callback
     if FFI_lib is None:
         srcdir = os.path.dirname(os.path.realpath(__file__))
-        srcfiles = get_abs_files(srcdir, SOURCE_FILES)
-        ofiles = get_abs_files(srcdir, OTHER_FILES)
-        destlib = get_abs_files(srcdir, [DEST_LIB])[0]
-        if check_build_code(srcfiles + ofiles + [__file__], destlib):
-            if check_gcc_option(NATIVE_FLAGS):
-                cmd = "%s %s %s" % (GCC_CMD, NATIVE_FLAGS, COMPILE_ARGS)
-            else:
-                cmd = "%s %s" % (GCC_CMD, COMPILE_ARGS)
-            logging.info("Building C code module %s", DEST_LIB)
-            do_build_code(cmd % (destlib, " ".join(srcfiles)))
+        destlib = DEST_LIB
         FFI_main = cffi.FFI()
         for d in defs_all:
             FFI_main.cdef(d)

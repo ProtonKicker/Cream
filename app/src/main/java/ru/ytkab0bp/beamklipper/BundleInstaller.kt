@@ -26,16 +26,12 @@ object BundleInstaller {
             }
 
             val nativeDir = File(info.applicationInfo!!.nativeLibraryDir)
-            val lib = File(nativeDir, "libklippy_chelper.so")
 
-            if (prefs.getString("native_lib", "") != lib.absolutePath) {
-                patchBundledFile(root, assets, "klipper", "klippy/chelper/__init__.py") {
-                    it.replace("\${DEST_LIB}", lib.absolutePath)
-                }
-                patchBundledFile(root, assets, "kalico", "klippy/chelper/__init__.py") {
-                    it.replace("\${DEST_LIB}", lib.absolutePath)
-                }
-                prefs.edit().putString("native_lib", lib.absolutePath).apply()
+            patchBundledFile(root, assets, "klipper", "klippy/chelper/__init__.py") {
+                it.replace("\${DEST_LIB}", File(nativeDir, "libklippy_chelper.so").absolutePath)
+            }
+            patchBundledFile(root, assets, "kalico", "klippy/chelper/__init__.py") {
+                it.replace("\${DEST_LIB}", File(nativeDir, "libkalico_chelper.so").absolutePath)
             }
 
             var str = readString(assets, "moonraker/moonraker/utils/sysfs_devs.py")

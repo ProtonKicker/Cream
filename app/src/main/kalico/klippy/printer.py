@@ -559,6 +559,12 @@ def main():
     usage = "%prog [options] <config file>"
     opts = optparse.OptionParser(usage, prog="klippy")
     opts.add_option(
+        "-B",
+        "--beam-input",
+        dest="beaminput",
+        help="configures input for beam",
+    )
+    opts.add_option(
         "-i",
         "--debuginput",
         dest="debuginput",
@@ -643,7 +649,11 @@ def main():
     debuglevel = logging.INFO
     if options.verbose:
         debuglevel = logging.DEBUG
-    if options.debuginput:
+    if options.beaminput:
+        beaminput = open(options.beaminput, "rb")
+        start_args["gcode_fd"] = beaminput.fileno()
+        start_args["beam"] = True
+    elif options.debuginput:
         start_args["debuginput"] = options.debuginput
         debuginput = open(options.debuginput, "rb")
         start_args["gcode_fd"] = debuginput.fileno()

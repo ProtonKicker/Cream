@@ -107,8 +107,16 @@ fun HomeScreen(
                                 .clip(RectangleShape)
                                 .background(webBg, RectangleShape)
                                 .border(2.dp, Ink, RectangleShape)
-                                .clickable(enabled = running, onClick = { openWebFrontend(context) })
-                                .padding(16.dp),
+                                .clickable(
+                                    onClick = {
+                                        if (running) {
+                                            openWebFrontend(context)
+                                        } else {
+                                            mainViewModel.runStopAll()
+                                        }
+                                    }
+                                )
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Row(

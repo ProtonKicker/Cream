@@ -171,23 +171,7 @@ class KlipperInstance {
 
         if (state == State.IDLE) {
             slots.remove(this)
-            if (slots.isEmpty()) {
-                mainHandler.post {
-                    if (slots.isNotEmpty()) return@post
-                    if (webServerConnection != null) {
-                        KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.STOPPING))
-                        try { KlipperApp.INSTANCE.unbindService(webServerConnection!!) } catch (_: Throwable) {}
-                        try { KlipperApp.INSTANCE.stopService(Intent(KlipperApp.INSTANCE, WebService::class.java)) } catch (_: Throwable) {}
-                        KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.IDLE))
-                        webServerConnection = null
-                    }
-                    if (cameraServerConnection != null) {
-                        try { KlipperApp.INSTANCE.unbindService(cameraServerConnection!!) } catch (_: Throwable) {}
-                        try { KlipperApp.INSTANCE.stopService(Intent(KlipperApp.INSTANCE, CameraService::class.java)) } catch (_: Throwable) {}
-                        cameraServerConnection = null
-                    }
-                }
-            }
+            mainHandler.post { stopServerServicesIfNoSlots() }
         } else if (state == State.RUNNING) {
             mainHandler.post {
                 if (webServerConnection == null) {
@@ -262,6 +246,17 @@ class KlipperInstance {
                     }
                 }
             }
+
+            val loadedIds = loaded.mapNotNull { it.id }.toHashSet()
+            for (was in slots.keys.toList()) {
+                val wasId = was.id ?: continue
+                if (wasId in loadedIds) continue
+                Log.i(TAG, "instance ${was.name} no longer in DB, stopping (state=${was.getState()})")
+                slots.remove(was)
+                try { was.stop() } catch (_: Throwable) {}
+            }
+            mainHandler.post { stopServerServicesIfNoSlots() }
+
             instances = loaded
             instanceMap.clear()
             KlipperApp.EVENT_BUS.fireEvent(InstancesRefreshedEvent())
@@ -321,6 +316,22 @@ class KlipperInstance {
 
         @JvmStatic
         fun isWebServerRunning(): Boolean = webServerConnection != null
+
+        private fun stopServerServicesIfNoSlots() {
+            if (slots.isNotEmpty()) return
+            if (webServerConnection != null) {
+                KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.STOPPING))
+                try { KlipperApp.INSTANCE.unbindService(webServerConnection!!) } catch (_: Throwable) {}
+                try { KlipperApp.INSTANCE.stopService(Intent(KlipperApp.INSTANCE, WebService::class.java)) } catch (_: Throwable) {}
+                KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.IDLE))
+                webServerConnection = null
+            }
+            if (cameraServerConnection != null) {
+                try { KlipperApp.INSTANCE.unbindService(cameraServerConnection!!) } catch (_: Throwable) {}
+                try { KlipperApp.INSTANCE.stopService(Intent(KlipperApp.INSTANCE, CameraService::class.java)) } catch (_: Throwable) {}
+                cameraServerConnection = null
+            }
+        }
 
         @JvmStatic
         fun onCameraConfigChanged(enable: Boolean) {

@@ -384,8 +384,8 @@ tasks.register('bundleKlipper') {
                 if (it.getName() == "ext_version") return
 
                 var sub = it.getAbsolutePath().substring(klippy.getAbsolutePath().length() + 1).replace('\\', '/')
-                arr.put('klippy/extras/' + sub)
-                var f = new File(assets, 'klipper/klippy/extras/' + sub)
+                arr.put('beam_ext/' + sub)
+                var f = new File(assets, 'klipper/beam_ext/' + sub)
                 f.getParentFile().mkdirs()
                 Files.copy(it.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
@@ -455,8 +455,8 @@ tasks.register('bundleKlipper') {
 
                     var sub = it.getAbsolutePath().substring(klippy.getAbsolutePath().length() + 1).replace('\\', '/')
                     if (sub.startsWith(".") || sub.contains("/.")) return
-                    arr.put('klippy/extras/' + sub)
-                    var f = new File(assets, 'kalico/klippy/extras/' + sub)
+                    arr.put('beam_ext/' + sub)
+                    var f = new File(assets, 'kalico/beam_ext/' + sub)
                     f.getParentFile().mkdirs()
                     Files.copy(it.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 }
