@@ -12,9 +12,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.Display
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -51,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         ) {
             PermissionsChecker.setIgnoreNotificationsChannel(true)
         }
-        forceHighestRefreshRate()
         isCurrentLauncher = intent?.categories?.contains(Intent.CATEGORY_HOME) == true
 
         AppState.start()
@@ -118,41 +114,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_NOTIFICATIONS = 100
         private const val REQUEST_CAMERA = 200
-    }
-
-    @android.annotation.SuppressLint("InlinedApi")
-    private fun forceHighestRefreshRate() {
-        if (isTV) return
-        val w = window ?: return
-        runCatching {
-            if (Build.VERSION.SDK_INT >= 30) {
-                val display: Display? = display
-                if (display != null) {
-                    val modes = display.supportedModes
-                    val current = display.mode
-                    val physicalY = current?.physicalHeight ?: 0
-                    val physicalX = current?.physicalWidth ?: 0
-                    var best: Display.Mode? = current
-                    var bestRefresh = best?.refreshRate ?: 60f
-                    for (m in modes) {
-                        if (physicalY != 0 && physicalX != 0) {
-                            if (m.physicalHeight != physicalY || m.physicalWidth != physicalX) continue
-                        }
-                        if (m.refreshRate > bestRefresh) {
-                            bestRefresh = m.refreshRate
-                            best = m
-                        }
-                    }
-                    best?.let { w.attributes = w.attributes.apply { preferredDisplayModeId = it.modeId } }
-                }
-            } else {
-                val d = display ?: return
-                val maxRate = d.supportedRefreshRates.maxOrNull() ?: 60f
-                if (maxRate > 60f) {
-                    w.attributes = w.attributes.apply { preferredRefreshRate = maxRate }
-                }
-            }
-        }
-        runCatching { w.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED) }
     }
 }

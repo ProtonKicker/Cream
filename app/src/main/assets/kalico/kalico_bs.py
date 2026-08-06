@@ -4,6 +4,7 @@ import sys
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, os.path.join(here, "beam_ext"))
     sub = os.path.join(here, "klippy")
     sys.path.insert(0, sub)
     entry = os.path.join(sub, "klippy.py")

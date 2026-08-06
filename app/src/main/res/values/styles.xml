@@ -1,76 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/creamPrimary</item>
-        <item name="colorOnPrimary">@color/creamOnPrimary</item>
-        <item name="colorPrimaryContainer">@color/surfaceCreamContainer</item>
-        <item name="colorOnPrimaryContainer">@color/textColorOnCream</item>
-        <item name="colorSecondary">@color/creamPrimaryLight</item>
-        <item name="colorOnSecondary">@color/creamOnPrimary</item>
-        <item name="colorSecondaryContainer">@color/creamPrimaryLight</item>
-        <item name="colorOnSecondaryContainer">@color/textColorOnCream</item>
-        <item name="colorTertiary">@color/creamPrimaryDark</item>
-        <item name="colorOnTertiary">@color/creamOnPrimary</item>
-        <item name="colorTertiaryContainer">@color/snippetSurface</item>
-        <item name="colorOnTertiaryContainer">@color/textColorOnCream</item>
-        <item name="colorSurface">@color/windowBackground</item>
-        <item name="colorOnSurface">@color/textColorOnCream</item>
-        <item name="colorSurfaceVariant">@color/surfaceCream</item>
-        <item name="colorOnSurfaceVariant">@color/textColorOnCreamSecondary</item>
-        <item name="colorSurfaceContainerLowest">@color/windowBackground</item>
-        <item name="colorSurfaceContainerLow">@color/surfaceCream</item>
-        <item name="colorSurfaceContainer">@color/snippetSurface</item>
-        <item name="colorSurfaceContainerHigh">@color/surfaceCreamContainer</item>
-        <item name="colorSurfaceContainerHighest">@color/creamSurfaceHighest</item>
-        <item name="colorOutline">@color/dividerColor</item>
-        <item name="colorOutlineVariant">@color/dividerColor</item>
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/inkOnAccent</item>
+        <item name="colorPrimaryContainer">@color/accent</item>
+        <item name="colorOnPrimaryContainer">@color/inkOnAccent</item>
+        <item name="colorSecondary">@color/ink</item>
+        <item name="colorOnSecondary">@color/paper</item>
+        <item name="colorSecondaryContainer">@color/paperAlt</item>
+        <item name="colorOnSecondaryContainer">@color/ink</item>
+        <item name="colorTertiary">@color/ok</item>
+        <item name="colorOnTertiary">@color/inkOnOk</item>
+        <item name="colorTertiaryContainer">@color/ok</item>
+        <item name="colorOnTertiaryContainer">@color/inkOnOk</item>
+        <item name="colorSurface">@color/paper</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorSurfaceVariant">@color/paperAlt</item>
+        <item name="colorOnSurfaceVariant">@color/inkMuted</item>
+        <item name="colorSurfaceContainerLowest">@color/paper</item>
+        <item name="colorSurfaceContainerLow">@color/paper</item>
+        <item name="colorSurfaceContainer">@color/paper</item>
+        <item name="colorSurfaceContainerHigh">@color/paperAlt</item>
+        <item name="colorSurfaceContainerHighest">@color/paperAlt</item>
+        <item name="colorOutline">@color/ink</item>
+        <item name="colorOutlineVariant">@color/inkDim</item>
+        <item name="colorError">@color/accent</item>
+        <item name="colorOnError">@color/inkOnAccent</item>
 
-        <item name="cardOutlineColor">@color/cardOutlineColor</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="cardOutlineColor">@color/ink</item>
+        <item name="android:windowBackground">@color/paper</item>
         <item name="dividerColor">@color/dividerColor</item>
-        <item name="navbarColor">@color/navigationBarColor</item>
-        <item name="android:colorAccent">@color/creamPrimary</item>
-        <item name="textColorOnAccent">@color/creamOnPrimary</item>
-        <item name="dialogBackground">@color/windowBackground</item>
-        <item name="startStopButtonForegroundColor">@color/creamOnPrimary</item>
-        <item name="startStopButtonColor_0">@color/creamPrimary</item>
-        <item name="startStopButtonColor_1">#E8CB88</item>
-        <item name="startStopButtonColor_2">#EED69A</item>
-        <item name="startStopButtonColor_3">#D4BA70</item>
-        <item name="startStopButtonColor_4">#F0DDA8</item>
-        <item name="startStopButtonColor_5">#E0C682</item>
-        <item name="startStopButtonColor_6">#F2DCA5</item>
-        <item name="startStopButtonColor_7">#DAC47C</item>
-        <item name="startStopButtonColor_8">#E8D092</item>
-        <item name="startStopButtonColor_9">#F0DBA0</item>
-        <item name="textColorDanger">#C0392B</item>
+        <item name="navbarColor">@color/paper</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="textColorOnAccent">@color/inkOnAccent</item>
+        <item name="dialogBackground">@color/paper</item>
+        <item name="startStopButtonForegroundColor">@color/paper</item>
+        <item name="startStopButtonColor_0">@color/accent</item>
+        <item name="startStopButtonColor_1">@color/paper</item>
+        <item name="startStopButtonColor_2">@color/paperAlt</item>
+        <item name="startStopButtonColor_3">@color/paper</item>
+        <item name="startStopButtonColor_4">@color/accent</item>
+        <item name="startStopButtonColor_5">@color/paper</item>
+        <item name="startStopButtonColor_6">@color/paperAlt</item>
+        <item name="startStopButtonColor_7">@color/paper</item>
+        <item name="startStopButtonColor_8">@color/accent</item>
+        <item name="startStopButtonColor_9">@color/paper</item>
+        <item name="textColorDanger">@color/accent</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/navigationBarColor</item>
+        <item name="android:navigationBarColor">@color/paper</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="BottomSheetDialogTheme" parent="Theme.Material3.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-        <item name="android:navigationBarColor">@color/windowBackground</item>
+        <item name="android:navigationBarColor">@color/paper</item>
         <item name="bottomSheetStyle">@style/AppBottomSheet</item>
-        <item name="colorPrimary">@color/creamPrimary</item>
-        <item name="colorSecondary">@color/creamPrimary</item>
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorSecondary">@color/ink</item>
     </style>
 
     <style name="AppBottomSheet" parent="Widget.Material3.BottomSheet">
-        <item name="backgroundTint">@color/windowBackground</item>
+        <item name="backgroundTint">@color/paper</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
     </style>
 
-    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
-        <item name="cornerSizeTopLeft">32dp</item>
-        <item name="cornerSizeTopRight">32dp</item>
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.Corner.None">
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
     <style name="SnippetCard">
-        <item name="android:background">@color/snippetSurface</item>
+        <item name="android:background">@color/paperAlt</item>
     </style>
 </resources>

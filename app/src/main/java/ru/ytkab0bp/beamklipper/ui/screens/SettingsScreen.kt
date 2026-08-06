@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -213,7 +214,7 @@ private fun SnippetCard(
 ) {
     Card(
         modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RectangleShape)
             .let {
                 if (onClick != null) it.clickable(onClick = onClick) else it
             },

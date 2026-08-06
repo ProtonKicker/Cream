@@ -4,7 +4,6 @@ import android.animation.TimeInterpolator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
@@ -17,10 +16,7 @@ import ru.ytkab0bp.beamklipper.KlipperApp
 object ViewUtils {
     @JvmField
     val CUBIC_INTERPOLATOR: TimeInterpolator = PathInterpolator(0.25f, 0f, 0.25f, 1f)
-    @JvmField
-    val ROBOTO_MEDIUM = "Roboto-Medium"
 
-    private val typefaceCache = HashMap<String, Typeface>()
     private val uiHandler = Handler(Looper.getMainLooper())
 
     @JvmStatic
@@ -34,16 +30,6 @@ object ViewUtils {
 
     @JvmStatic
     fun getUiHandler(): Handler = uiHandler
-
-    @JvmStatic
-    fun getTypeface(key: String): Typeface {
-        var tf = typefaceCache[key]
-        if (tf == null) {
-            tf = Typeface.createFromAsset(KlipperApp.INSTANCE.assets, "$key.ttf")
-            typefaceCache[key] = tf
-        }
-        return tf!!
-    }
 
     @JvmStatic
     fun lerp(from: Float, to: Float, `val`: Float): Float = from + (to - from) * `val`

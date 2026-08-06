@@ -26,7 +26,7 @@ fun CreamApp(
                 }
             )
         } else {
-            PagerHost(
+            NavHost(
                 isCurrentLauncher = isCurrentLauncher,
                 mainViewModel = mainViewModel
             )

@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="creamPrimary">#F2DA9C</color>
-    <color name="creamPrimaryDark">#DCC07A</color>
-    <color name="creamPrimaryLight">#FAECC2</color>
-    <color name="creamOnPrimary">#3B2C05</color>
+    <color name="paper">#FFF8E6</color>
+    <color name="paperAlt">#F2ECD6</color>
+    <color name="ink">#171512</color>
+    <color name="inkMuted">#8C171512</color>
+    <color name="inkDim">#5C171512</color>
+    <color name="accent">#E6402F</color>
+    <color name="inkOnAccent">#FFFFFF</color>
+    <color name="ok">#2F9E44</color>
+    <color name="inkOnOk">#FFFFFF</color>
+    <color name="warn">#D99A1B</color>
+    <color name="inkOnWarn">#171512</color>
 
-    <color name="surfaceCream">#FFF1CE</color>
-    <color name="surfaceCreamContainer">#F6DEA3</color>
-    <color name="cardOutlineColor">#00000000</color>
+    <color name="creamPrimary">#E6402F</color>
+    <color name="creamPrimaryDark">#C5341C</color>
+    <color name="creamPrimaryLight">#F0634F</color>
+    <color name="creamOnPrimary">#FFFFFF</color>
+    <color name="surfaceCream">#FFF8E6</color>
+    <color name="surfaceCreamContainer">#F2ECD6</color>
+    <color name="cardOutlineColor">#171512</color>
     <color name="navigationBarColor">#FFF8E6</color>
     <color name="windowBackground">#FFF8E6</color>
-    <color name="dividerColor">#0D000000</color>
-    <color name="snippetSurface">#FAE6B0</color>
-    <color name="snippetOutline">#14F2DA9C</color>
-
-    <color name="textColorOnCream">#4A3910</color>
-    <color name="textColorOnCreamSecondary">#7C6C47</color>
-    <color name="creamSurfaceHighest">#FAECC2</color>
+    <color name="dividerColor">#14171512</color>
+    <color name="snippetSurface">#F2ECD6</color>
+    <color name="snippetOutline">#171512</color>
+    <color name="textColorOnCream">#171512</color>
+    <color name="textColorOnCreamSecondary">#8C171512</color>
+    <color name="creamSurfaceHighest">#F2ECD6</color>
 </resources>

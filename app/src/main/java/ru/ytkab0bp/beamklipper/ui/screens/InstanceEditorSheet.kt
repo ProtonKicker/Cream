@@ -1,11 +1,15 @@
 package ru.ytkab0bp.beamklipper.ui.screens
 
 import android.content.Intent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +54,10 @@ import ru.ytkab0bp.beamklipper.KlipperApp
 import ru.ytkab0bp.beamklipper.KlipperInstance
 import ru.ytkab0bp.beamklipper.R
 import ru.ytkab0bp.beamklipper.ui.state.InstanceEditorViewModel
+import ru.ytkab0bp.beamklipper.ui.theme.Accent
+import ru.ytkab0bp.beamklipper.ui.theme.Ink
+import ru.ytkab0bp.beamklipper.ui.theme.InkOnAccent
+import ru.ytkab0bp.beamklipper.ui.theme.Paper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,146 +81,212 @@ fun InstanceEditorSheet(
     }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val innerShape = RectangleShape
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
+        containerColor = Paper,
+        dragHandle = {
+            Box(
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 8.dp)
+                    .width(40.dp)
+                    .height(4.dp)
+                    .clip(RectangleShape)
+                    .background(Ink)
+            )
+        },
+        shape = RectangleShape
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 32.dp)
+                .padding(horizontal = 20.dp)
         ) {
-            Text(
-                text = stringResource(if (editInstance == null) R.string.NewInstance else R.string.EditInstance),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(Modifier.height(20.dp))
-
-            Text(
-                text = stringResource(R.string.InstanceName),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholder = { Text("e.g. Printer 1") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(20.dp))
-
-            if (editInstance == null) {
-                Text(
-                    text = stringResource(R.string.InstanceConfig),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(Modifier.height(8.dp))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { if (filesList.isNotEmpty()) showConfigPicker = true },
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                    shape = RoundedCornerShape(20.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = configFile ?: stringResource(R.string.InstanceConfigHint),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (configFile != null) MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            painterResource(R.drawable.ic_chevron_down_28),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                Spacer(Modifier.height(20.dp))
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .clickable { openInstanceFolder(context, editInstance) }
-                        .padding(vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painterResource(R.drawable.ic_folder_outline_28),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(R.string.EditOpenDirectory),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Spacer(Modifier.height(20.dp))
-            }
-
-            Row(
+            Surface(
+                shape = innerShape,
+                color = Paper,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .border(2.dp, Ink, innerShape)
             ) {
-                Text(
-                    text = stringResource(R.string.Autostart),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
-                )
-                Switch(checked = autostart, onCheckedChange = { autostart = it })
-            }
-            Spacer(Modifier.height(16.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = 28.dp, top = 16.dp)
+                ) {
+                    Text(
+                        text = stringResource(if (editInstance == null) R.string.NewInstance else R.string.EditInstance),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Ink
+                    )
+                    Spacer(Modifier.height(20.dp))
 
-            Button(
-                onClick = {
-                    var nameStr = name.text.trim()
-                    if (nameStr.isEmpty()) {
-                        val currentInstances = KlipperApp.DATABASE.getInstances().map { it.name }
-                        var n = 1
-                        while (true) {
-                            val candidate = "Printer $n"
-                            if (!currentInstances.contains(candidate)) {
-                                nameStr = candidate
-                                break
+                    Text(
+                        text = stringResource(R.string.InstanceName),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Ink
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        placeholder = { Text("e.g. Printer 1", color = Ink) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Ink,
+                            unfocusedBorderColor = Ink,
+                            focusedTextColor = Ink,
+                            unfocusedTextColor = Ink,
+                            cursorColor = Ink,
+                            focusedContainerColor = Paper,
+                            unfocusedContainerColor = Paper
+                        ),
+                        shape = RectangleShape
+                    )
+                    Spacer(Modifier.height(20.dp))
+
+                    if (editInstance == null) {
+                        Text(
+                            text = stringResource(R.string.InstanceConfig),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(2.dp, Ink, RectangleShape)
+                                    .clickable { if (filesList.isNotEmpty()) showConfigPicker = true },
+                                colors = CardDefaults.cardColors(containerColor = Paper),
+                                shape = RectangleShape
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = configFile ?: stringResource(R.string.InstanceConfigHint),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = if (configFile != null) Ink else InkMuted,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Icon(
+                                        painterResource(R.drawable.ic_chevron_down_28),
+                                        contentDescription = null,
+                                        tint = Ink
+                                    )
+                                }
                             }
-                            n++
+                        }
+                        Spacer(Modifier.height(20.dp))
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(2.dp, Ink, RectangleShape)
+                                    .clip(RectangleShape)
+                                    .clickable { openInstanceFolder(context, editInstance) }
+                                    .background(Paper)
+                                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_folder_outline_28),
+                                    contentDescription = null,
+                                    tint = Ink
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    text = stringResource(R.string.EditOpenDirectory),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = Ink
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(20.dp))
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(2.dp, Ink, RectangleShape)
+                            .clip(RectangleShape)
+                            .background(Paper)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.Autostart),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Ink,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Switch(checked = autostart, onCheckedChange = { autostart = it })
                         }
                     }
-                    if (editInstance == null && configFile.isNullOrEmpty()) {
-                        error = context.getString(R.string.ErrorConfigEmpty)
-                        return@Button
+                    Spacer(Modifier.height(20.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(
+                            onClick = {
+                                var nameStr = name.text.trim()
+                                if (nameStr.isEmpty()) {
+                                    val currentInstances = KlipperApp.DATABASE.getInstances().map { it.name }
+                                    var n = 1
+                                    while (true) {
+                                        val candidate = "Printer $n"
+                                        if (!currentInstances.contains(candidate)) {
+                                            nameStr = candidate
+                                            break
+                                        }
+                                        n++
+                                    }
+                                }
+                                if (editInstance == null && configFile.isNullOrEmpty()) {
+                                    error = context.getString(R.string.ErrorConfigEmpty)
+                                    return@Button
+                                }
+                                viewModel.save(nameStr, autostart) {
+                                    onDismiss()
+                                }
+                            },
+                            enabled = !saving,
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Accent,
+                                contentColor = InkOnAccent,
+                                disabledContainerColor = Accent.copy(alpha = 0.5f),
+                                disabledContentColor = InkOnAccent.copy(alpha = 0.5f)
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .border(2.dp, Ink, RectangleShape)
+                        ) {
+                            Text(
+                                text = stringResource(if (editInstance == null) R.string.InstanceCreate else R.string.InstanceOK),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                     }
-                    viewModel.save(nameStr, autostart) {
-                        onDismiss()
-                    }
-                },
-                enabled = !saving,
-                shape = RoundedCornerShape(26.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
-                Text(
-                    text = stringResource(if (editInstance == null) R.string.InstanceCreate else R.string.InstanceOK),
-                    style = MaterialTheme.typography.titleMedium
-                )
+                }
             }
         }
     }
@@ -253,6 +331,8 @@ fun InstanceEditorSheet(
         )
     }
 }
+
+private val InkMuted = androidx.compose.ui.graphics.Color(0xFF555555)
 
 private fun openInstanceFolder(context: android.content.Context, instance: KlipperInstance) {
     val uri = android.provider.DocumentsContract.buildRootUri("ru.ytkab0bp.beamklipper", instance.id)

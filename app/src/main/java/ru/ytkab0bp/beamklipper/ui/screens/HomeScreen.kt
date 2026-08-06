@@ -6,6 +6,8 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.text.format.Formatter
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,10 +26,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,36 +37,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.ytkab0bp.beamklipper.KlipperApp
 import ru.ytkab0bp.beamklipper.KlipperInstance
 import ru.ytkab0bp.beamklipper.R
 import ru.ytkab0bp.beamklipper.service.WebService
+import ru.ytkab0bp.beamklipper.ui.components.BrutalTile
 import ru.ytkab0bp.beamklipper.ui.state.MainViewModel
-import ru.ytkab0bp.beamklipper.ui.theme.InstanceCardDark
-import ru.ytkab0bp.beamklipper.ui.theme.InstanceCardIconTintDark
-import ru.ytkab0bp.beamklipper.ui.theme.InstanceCardIconTintLight
-import ru.ytkab0bp.beamklipper.ui.theme.InstanceCardLight
-import ru.ytkab0bp.beamklipper.ui.theme.OnInstanceCardDark
-import ru.ytkab0bp.beamklipper.ui.theme.OnInstanceCardLight
-import ru.ytkab0bp.beamklipper.ui.theme.OnWebCardDark
-import ru.ytkab0bp.beamklipper.ui.theme.OnWebCardLight
-import ru.ytkab0bp.beamklipper.ui.theme.WebCardDarkFluidd
-import ru.ytkab0bp.beamklipper.ui.theme.WebCardDarkMainsail
-import ru.ytkab0bp.beamklipper.ui.theme.WebCardLightFluidd
-import ru.ytkab0bp.beamklipper.ui.theme.WebCardLightMainsail
+import ru.ytkab0bp.beamklipper.ui.theme.Accent
+import ru.ytkab0bp.beamklipper.ui.theme.Ink
+import ru.ytkab0bp.beamklipper.ui.theme.InkMuted
+import ru.ytkab0bp.beamklipper.ui.theme.Paper
 import ru.ytkab0bp.beamklipper.ui.theme.cardColor
 import ru.ytkab0bp.beamklipper.utils.Prefs
 
@@ -84,7 +75,6 @@ fun HomeScreen(
     val webState by mainViewModel.webState.collectAsStateWithLifecycle()
     val webFrontend by mainViewModel.webFrontend.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
 
     var deleteInstance by remember { mutableStateOf<KlipperInstance?>(null) }
     var noFreeSlots by remember { mutableStateOf(false) }
@@ -111,52 +101,180 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             stickyHeader(key = "web", contentType = "web") {
-                Surface(color = MaterialTheme.colorScheme.surface) {
+                Surface(color = Paper) {
                     Box(Modifier.padding(top = 16.dp, bottom = 12.dp)) {
-                        WebCard(
-                            frontend = webFrontend,
-                            webState = webState,
-                            darkTheme = darkTheme,
-                            onClick = { openWebFrontend(context) }
-                        )
+                        val isFluidd = webFrontend == Prefs.FRONTEND_FLUIDD
+                        val running = webState == KlipperInstance.State.RUNNING
+                        val webBg = if (running) Accent else Paper
+                        BrutalTile(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 64.dp),
+                            background = webBg,
+                            onClick = if (running) ({ openWebFrontend(context) }) else null
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (isFluidd) R.drawable.ic_square_stack_up_outline_28 else R.drawable.ic_sailing_24
+                                    ),
+                                    contentDescription = null,
+                                    tint = Ink,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(if (isFluidd) R.string.Fluidd else R.string.Mainsail),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = Ink,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    if (running) {
+                                        Text(
+                                            text = webIpInfo(context),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = InkMuted
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            items(instances, key = { it.id ?: it.name }, contentType = { "inst" }) { inst ->
-                key(inst.id ?: inst.name) {
-                    val k = inst.id ?: inst.name
-                    val stateSnapshot by rememberUpdatedState(instanceStates)
-                    val stateVal by remember(instanceStates, k) {
-                        derivedStateOf { stateSnapshot[k] ?: inst.getState() }
-                    }
-                    val onClickInst by rememberUpdatedState(onClick@{
-                        editorInstance = inst
-                        editorVisible = true
-                    })
-                    val onLongClickInst by rememberUpdatedState(onLongClick@{
-                        deleteInstance = inst
-                    })
-                    val onToggleInst by rememberUpdatedState(onToggle@{
-                        when (stateVal) {
-                            KlipperInstance.State.STARTING, KlipperInstance.State.STOPPING -> {}
-                            KlipperInstance.State.IDLE -> {
-                                if (!KlipperInstance.hasFreeSlots()) {
-                                    noFreeSlots = true
-                                } else {
-                                    mainViewModel.toggle(inst)
+
+            item(key = "instances-label", contentType = "label") {
+                Text(
+                    text = "INSTANCES",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Ink,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+
+            items(
+                instances.chunked(2),
+                key = { it.joinToString("|") { inst -> inst.id ?: inst.name } },
+                contentType = { "inst-row" }
+            ) { chunk ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    chunk.forEach { inst ->
+                        key(inst.id ?: inst.name) {
+                            val k = inst.id ?: inst.name
+                            val stateSnapshot by rememberUpdatedState(instanceStates)
+                            val stateVal by remember(instanceStates, k) {
+                                derivedStateOf { stateSnapshot[k] ?: inst.getState() }
+                            }
+                            val onClickInst by rememberUpdatedState(onClick@{
+                                editorInstance = inst
+                                editorVisible = true
+                            })
+                            val onLongClickInst by rememberUpdatedState(onLongClick@{
+                                deleteInstance = inst
+                            })
+                            val onToggleInst by rememberUpdatedState(onToggle@{
+                                when (stateVal) {
+                                    KlipperInstance.State.STARTING, KlipperInstance.State.STOPPING -> {}
+                                    KlipperInstance.State.IDLE -> {
+                                        if (!KlipperInstance.hasFreeSlots()) {
+                                            noFreeSlots = true
+                                        } else {
+                                            mainViewModel.toggle(inst)
+                                        }
+                                    }
+                                    else -> mainViewModel.toggle(inst)
+                                }
+                            })
+                            val instBg = cardColor((inst.id ?: inst.name).hashCode())
+                            val toggleBg = when (stateVal) {
+                                KlipperInstance.State.RUNNING, KlipperInstance.State.STOPPING -> Accent
+                                else -> Paper
+                            }
+                            BrutalTile(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .heightIn(min = 130.dp)
+                                    .combinedClickable(
+                                        onClick = onClickInst,
+                                        onLongClick = onLongClickInst
+                                    ),
+                                background = instBg
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.Top
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(inst.icon.drawable),
+                                            contentDescription = null,
+                                            tint = Ink,
+                                            modifier = Modifier.size(28.dp)
+                                        )
+                                    }
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        text = inst.name,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Ink,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                    if (stateVal == KlipperInstance.State.STARTING || stateVal == KlipperInstance.State.STOPPING || stateVal == KlipperInstance.State.RUNNING) {
+                                        val statusText = when (stateVal) {
+                                            KlipperInstance.State.STARTING -> stringResource(R.string.InstanceStarting)
+                                            KlipperInstance.State.STOPPING -> stringResource(R.string.InstanceStopping)
+                                            else -> "Running"
+                                        }
+                                        Text(
+                                            text = statusText,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = InkMuted
+                                        )
+                                    }
+                                    Spacer(Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End
+                                    ) {
+                                        Surface(
+                                            onClick = onToggleInst,
+                                            enabled = stateVal != KlipperInstance.State.STARTING && stateVal != KlipperInstance.State.STOPPING,
+                                            shape = RectangleShape,
+                                            color = toggleBg,
+                                            contentColor = Ink,
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .border(2.dp, Ink, RectangleShape),
+                                            tonalElevation = 0.dp,
+                                            shadowElevation = 0.dp
+                                        ) {
+                                            Box(contentAlignment = Alignment.Center) {
+                                                Icon(
+                                                    painterResource(if (stateVal == KlipperInstance.State.RUNNING || stateVal == KlipperInstance.State.STOPPING) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            else -> mainViewModel.toggle(inst)
                         }
-                    })
-                    InstanceCard(
-                        instance = inst,
-                        state = stateVal,
-                        darkTheme = darkTheme,
-                        onClick = onClickInst,
-                        onToggle = onToggleInst,
-                        onLongClick = onLongClickInst
-                    )
+                    }
+                    if (chunk.size == 1) {
+                        Spacer(Modifier.weight(1f))
+                    }
                 }
             }
         }
@@ -167,85 +285,151 @@ fun HomeScreen(
                 .padding(horizontal = 24.dp, vertical = 32.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            FloatingActionButton(
-                onClick = {
-                    editorInstance = null
-                    editorVisible = true
-                },
-                shape = RoundedCornerShape(28.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(92.dp)
+            val fabShape = RectangleShape
+            Box(
+                modifier = Modifier.size(72.dp)
             ) {
-                Icon(painterResource(R.drawable.ic_add_outline_28), contentDescription = stringResource(R.string.NewInstance), modifier = Modifier.size(40.dp))
-            }
-            if (instances.isNotEmpty()) {
-                FloatingActionButton(
-                    onClick = { mainViewModel.runStopAll() },
-                    shape = RoundedCornerShape(28.dp),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(92.dp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(fabShape)
+                        .background(Accent, fabShape)
+                        .border(2.dp, Ink, fabShape)
+                        .let {
+                            it.clickable(
+                                onClick = {
+                                    editorInstance = null
+                                    editorVisible = true
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painterResource(if (anyRunning) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                        painterResource(R.drawable.ic_add_outline_28),
+                        contentDescription = stringResource(R.string.NewInstance),
+                        tint = Ink,
+                        modifier = Modifier.size(36.dp)
                     )
+                }
+            }
+            if (instances.isNotEmpty()) {
+                Box(
+                    modifier = Modifier.size(72.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(fabShape)
+                            .background(Accent, fabShape)
+                            .border(2.dp, Ink, fabShape)
+                            .let {
+                                it.clickable(onClick = { mainViewModel.runStopAll() })
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painterResource(if (anyRunning) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
+                            contentDescription = null,
+                            tint = Ink,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
                 }
             }
         }
     }
 
     deleteInstance?.let { inst ->
-        AlertDialog(
-            onDismissRequest = { deleteInstance = null },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            title = { Text(stringResource(R.string.InstanceDelete, inst.name)) },
-            text = { Text(stringResource(R.string.InstanceDeleteConfirm)) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        mainViewModel.delete(inst)
-                        deleteInstance = null
-                    }
+        Dialog(onDismissRequest = { deleteInstance = null }) {
+            val dlgShape = RectangleShape
+            Box(modifier = Modifier.padding(20.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper, dlgShape)
+                        .border(2.dp, Ink, dlgShape)
                 ) {
-                    Text(
-                        stringResource(android.R.string.ok),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { deleteInstance = null }) {
-                    Text(
-                        stringResource(android.R.string.cancel),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            text = stringResource(R.string.InstanceDelete, inst.name),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(R.string.InstanceDeleteConfirm),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(24.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { deleteInstance = null }) {
+                                Text(
+                                    stringResource(android.R.string.cancel),
+                                    color = Ink
+                                )
+                            }
+                            Spacer(Modifier.width(8.dp))
+                            TextButton(
+                                onClick = {
+                                    mainViewModel.delete(inst)
+                                    deleteInstance = null
+                                }
+                            ) {
+                                Text(
+                                    stringResource(android.R.string.ok),
+                                    color = Ink
+                                )
+                            }
+                        }
+                    }
                 }
             }
-        )
+        }
     }
 
     if (noFreeSlots) {
-        AlertDialog(
-            onDismissRequest = { noFreeSlots = false },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            title = { Text(stringResource(R.string.NoFreeSlots)) },
-            text = { Text(stringResource(R.string.NoFreeSlotsDescription, KlipperInstance.SLOTS_COUNT)) },
-            confirmButton = {
-                TextButton(onClick = { noFreeSlots = false }) {
-                    Text(
-                        stringResource(android.R.string.ok),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+        Dialog(onDismissRequest = { noFreeSlots = false }) {
+            val dlgShape = RectangleShape
+            Box(modifier = Modifier.padding(20.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper, dlgShape)
+                        .border(2.dp, Ink, dlgShape)
+                ) {
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            text = stringResource(R.string.NoFreeSlots),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(R.string.NoFreeSlotsDescription, KlipperInstance.SLOTS_COUNT),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(24.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { noFreeSlots = false }) {
+                                Text(
+                                    stringResource(android.R.string.ok),
+                                    color = Ink
+                                )
+                            }
+                        }
+                    }
                 }
             }
-        )
+        }
     }
 
     if (editorVisible) {
@@ -253,145 +437,6 @@ fun HomeScreen(
             editInstance = editorInstance,
             onDismiss = { editorVisible = false }
         )
-    }
-}
-
-@Composable
-private fun WebCard(frontend: String, webState: KlipperInstance.State, darkTheme: Boolean, onClick: () -> Unit) {
-    val context = LocalContext.current
-    val isFluidd = frontend == Prefs.FRONTEND_FLUIDD
-    val running = webState == KlipperInstance.State.RUNNING
-    val cardColor = if (darkTheme) {
-        if (isFluidd) WebCardDarkFluidd else WebCardDarkMainsail
-    } else {
-        if (isFluidd) WebCardLightFluidd else WebCardLightMainsail
-    }
-    val onCardColor = if (darkTheme) OnWebCardDark else OnWebCardLight
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .clickable(enabled = running, onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = cardColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(
-                    if (isFluidd) R.drawable.ic_square_stack_up_outline_28 else R.drawable.ic_sailing_24
-                ),
-                contentDescription = null,
-                tint = onCardColor,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(if (isFluidd) R.string.Fluidd else R.string.Mainsail),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = onCardColor
-                )
-                if (running) {
-                    Text(
-                        text = webIpInfo(context),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = onCardColor.copy(alpha = 0.75f)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun InstanceCard(
-    instance: KlipperInstance,
-    state: KlipperInstance.State,
-    darkTheme: Boolean,
-    onClick: () -> Unit,
-    onToggle: () -> Unit,
-    onLongClick: () -> Unit
-) {
-    val context = LocalContext.current
-    val containerColor = if (darkTheme) InstanceCardDark else InstanceCardLight
-    val onContainerColor = if (darkTheme) OnInstanceCardDark else OnInstanceCardLight
-    val iconTint = if (darkTheme) InstanceCardIconTintDark else InstanceCardIconTintLight
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            ),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .heightIn(min = 64.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier.size(40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(instance.icon.drawable),
-                    contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            Spacer(Modifier.width(12.dp))
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = instance.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = onContainerColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (state == KlipperInstance.State.STARTING || state == KlipperInstance.State.STOPPING) {
-                    Text(
-                        text = stringResource(
-                            if (state == KlipperInstance.State.STARTING) R.string.InstanceStarting else R.string.InstanceStopping
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = onContainerColor.copy(alpha = 0.7f)
-                    )
-                }
-            }
-            Spacer(Modifier.width(12.dp))
-            Surface(
-                onClick = onToggle,
-                enabled = state != KlipperInstance.State.STARTING && state != KlipperInstance.State.STOPPING,
-                shape = RoundedCornerShape(50),
-                color = onContainerColor,
-                contentColor = containerColor,
-                modifier = Modifier.size(40.dp),
-                tonalElevation = 0.dp,
-                shadowElevation = 0.dp
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        painterResource(if (state == KlipperInstance.State.RUNNING || state == KlipperInstance.State.STOPPING) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-        }
     }
 }
 
