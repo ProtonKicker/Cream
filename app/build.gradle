@@ -153,7 +153,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.goterl:lazysodium-android:5.1.0@aar'
     implementation 'org.java-websocket:Java-WebSocket:1.6.0'
-    implementation 'com.google.android.material:material:1.12.0'
     implementation 'org.tukaani:xz:1.9'
     implementation 'org.kamranzafar:jtar:2.3'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
@@ -332,6 +331,7 @@ tasks.register('bundleKlipper') {
             JSONArray arr = new JSONArray()
             files.each {
                 var sub = it.getAbsolutePath().substring(klippy.getAbsolutePath().length() + 1).replace('\\', '/')
+                if (sub.startsWith("chelper/") && !sub.endsWith("__init__.py")) return
                 arr.put('klippy/' + sub)
                 var f = new File(assets, 'klipper/klippy/' + sub)
                 f.getParentFile().mkdirs()
@@ -388,20 +388,6 @@ tasks.register('bundleKlipper') {
                 Files.copy(it.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
 
-            files.clear()
-            klippy = file('src/main/klipper/docs')
-            collectFiles(klippy, files)
-            files.each {
-                var sub = it.getAbsolutePath().substring(klippy.getAbsolutePath().length() + 1).replace('\\', '/')
-                if (sub.startsWith("_klipper3d")) {
-                    return
-                }
-                arr.put('docs/' + sub)
-                var f = new File(assets, 'klipper/docs/' + sub)
-                f.getParentFile().mkdirs()
-                Files.copy(it.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING)
-            }
-
             JSONObject index = new JSONObject()
             index.put('klipper', arr)
 
@@ -413,6 +399,7 @@ tasks.register('bundleKlipper') {
                 files.each {
                     var sub = it.getAbsolutePath().substring(klippy.getAbsolutePath().length() + 1).replace('\\', '/')
                     if (sub.startsWith(".") || sub.contains("/.")) return
+                    if (sub.startsWith("chelper/") && !sub.endsWith("__init__.py")) return
                     arr.put('klippy/' + sub)
                     var f = new File(assets, 'kalico/klippy/' + sub)
                     f.getParentFile().mkdirs()

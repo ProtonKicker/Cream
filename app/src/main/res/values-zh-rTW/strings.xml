@@ -77,7 +77,7 @@
     <string name="GitHubRepo">GitHub 儲存庫</string>
     <string name="OriginalBeamKlipper">原作：utkabobr 的 Beam Klipper</string>
     <string name="CreditsTitle">致謝</string>
-    <string name="CreditsText">Cream 是 Beam Klipper 的深度主題化 Kotlin 硬分叉，原版由 utkabobr 創作。沒有他的工作就不會有這個應用。</string>
+    <string name="CreditsText">Kream 是 Beam Klipper 的深度主題化 Kotlin 硬分叉，原版由 utkabobr 創作。沒有他的工作就不會有這個應用。</string>
     <string name="AppSettings">應用設定</string>
     <string name="EngineFrontend">引擎與介面</string>
     <string name="QuickStart">快速入門</string>

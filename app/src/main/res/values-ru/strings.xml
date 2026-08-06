@@ -79,7 +79,7 @@
     <string name="GitHubRepo">Репозиторий GitHub</string>
     <string name="OriginalBeamKlipper">Оригинал: Beam Klipper от utkabobr</string>
     <string name="CreditsTitle">Благодарности</string>
-    <string name="CreditsText">Cream — это глубоко тематизированный Kotlin-хардфорк Beam Klipper, изначально созданного utkabobr. Без его работы этого приложения не существовало бы.</string>
+    <string name="CreditsText">Kream — это глубоко тематизированный Kotlin-хардфорк Beam Klipper, изначально созданного utkabobr. Без его работы этого приложения не существовало бы.</string>
     <string name="AppSettings">Настройки приложения</string>
     <string name="EngineFrontend">Движок и веб-интерфейс</string>
     <string name="QuickStart">Быстрый старт</string>

@@ -1,0 +1,14 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+	<defs>
+		<image  width="512" height="512" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAAAXNSR0IB2cksfwAAAANQTFRF/fvUbJDz4gAAAIxJREFUeJztzDENAAAMA6DVv+mJ6NUEBJArRSAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgWA7eMqeAgEiRD3HAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre } 
+		.t0 { font-size: 400px;fill: #000000;font-weight: 700;font-family: "DejaVuSans-Bold", "DejaVu Sans" } 
+	</style>
+	<use id="Background" href="#img1" x="0" y="0"/>
+	<text id="K" transform="translate(87.5,405)">
+		<tspan x="0" y="0" class="t0">K</tspan><tspan  y="0" class="t0">
+</tspan>
+	</text>
+</svg>
