@@ -205,16 +205,31 @@ fun HomeScreen(
     deleteInstance?.let { inst ->
         AlertDialog(
             onDismissRequest = { deleteInstance = null },
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             title = { Text(stringResource(R.string.InstanceDelete, inst.name)) },
             text = { Text(stringResource(R.string.InstanceDeleteConfirm)) },
             confirmButton = {
-                TextButton(onClick = {
-                    mainViewModel.delete(inst)
-                    deleteInstance = null
-                }) { Text(stringResource(android.R.string.ok)) }
+                TextButton(
+                    onClick = {
+                        mainViewModel.delete(inst)
+                        deleteInstance = null
+                    }
+                ) {
+                    Text(
+                        stringResource(android.R.string.ok),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             },
             dismissButton = {
-                TextButton(onClick = { deleteInstance = null }) { Text(stringResource(android.R.string.cancel)) }
+                TextButton(onClick = { deleteInstance = null }) {
+                    Text(
+                        stringResource(android.R.string.cancel),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
         )
     }
@@ -222,10 +237,18 @@ fun HomeScreen(
     if (noFreeSlots) {
         AlertDialog(
             onDismissRequest = { noFreeSlots = false },
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             title = { Text(stringResource(R.string.NoFreeSlots)) },
             text = { Text(stringResource(R.string.NoFreeSlotsDescription, KlipperInstance.SLOTS_COUNT)) },
             confirmButton = {
-                TextButton(onClick = { noFreeSlots = false }) { Text(stringResource(android.R.string.ok)) }
+                TextButton(onClick = { noFreeSlots = false }) {
+                    Text(
+                        stringResource(android.R.string.ok),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
         )
     }
