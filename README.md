@@ -1,13 +1,13 @@
-# Beam Klipper - Klipper for Android
+# Kream - Klipper for Android
 
 **Read this in other languages: [English](README.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)**
 
-Beam Klipper allows you to run [Klipper](https://github.com/KevinOConnor/klipper) host software (Klippy) on any Android 5.0+ device with OTG support.
+Kream is a hardfork of [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper), which was originally created by [ProtonKicker](https://github.com/ProtonKicker). Kream allows you to run [Klipper](https://github.com/KevinOConnor/klipper) host software (Klippy) on any Android 5.0+ device with OTG support.
 
 # Quick start
 
 1. Download & install firmware.bin from [here](https://github.com/utkabobr/klipper/tree/prebuilt-v0.12.0) (or build your own from [this repo](https://github.com/utkabobr/klipper) to ensure versions compatibility)
-2. Install APK from [Releases tab](https://github.com/utkabobr/BeamKlipper/releases/latest)
+2. Install APK from [Releases tab](https://github.com/ProtonKicker/Kream/releases/latest)
 3. Allow all the permissions required
 4. Add printer instance (Click generic-***.cfg if your printer is not available)
 5. Click start
@@ -15,11 +15,11 @@ Beam Klipper allows you to run [Klipper](https://github.com/KevinOConnor/klipper
 7. Configure serial port from "Devices" tab in web editor (1.0.1+ configures automatically if you use single printer setup)
 8. You're awesome!
 
-# Can I use device as regular after I install Beam Klipper to it?
+# Can I use device as regular after I install Kream to it?
 
 **Yes!** You definitely can!
 
-Beam Klipper does not do **anything** to your Android system, it runs in user-space as a regular Android app
+Kream does not do **anything** to your Android system, it runs in user-space as a regular Android app
 
 # What's IP:port?
 
@@ -35,7 +35,7 @@ Recommended camera config is mjpeg-**stream** (Not adaptive mjpeg) for Fluidd an
 
 # What's inside?
 
-Beam Klipper bundles:
+Kream bundles:
 - [Klipper](https://github.com/KevinOConnor/klipper)
 - [Moonraker](https://github.com/Arksine/moonraker)
 - [Fluidd](https://github.com/fluidd-core/fluidd)
@@ -46,11 +46,11 @@ Beam Klipper bundles:
 
 # Android extensions
 
-Beam Klipper provides additional extensions to control some built-in features.
+Kream provides additional extensions to control some built-in features.
 
 ### Camera
 
-Include `[beam_camera]` into your printer.cfg
+Include `[kream_camera]` into your printer.cfg
 
 `SET_CAMERA_FLASHLIGHT ENABLED=true/false` - Toggles flashlight
 
@@ -58,7 +58,7 @@ Include `[beam_camera]` into your printer.cfg
 
 ### Beeper
 
-Include `[include beam_beeper.cfg]` into your printer.cfg
+Include `[include kream_beeper.cfg]` into your printer.cfg
 
 Use `M300` macro [as defined in docs](https://marlinfw.org/docs/gcode/M300.html)
 
@@ -75,7 +75,7 @@ You can circumvent this by setting app as default launcher and allowing all the 
 
 # Android TV support?
 
-Yup. Should be working just fine. But please note that some cheap TV boxes does not support setting Beam Klipper as launcher without disabling system one first, use ADB or root to disable it.
+Yup. Should be working just fine. But please note that some cheap TV boxes does not support setting Kream as launcher without disabling system one first, use ADB or root to disable it.
 
 # What USB hub to use?
 

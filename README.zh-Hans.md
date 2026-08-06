@@ -1,8 +1,8 @@
-# Cream - Android 上的 Klipper / Kalico
+# Kream - Android 上的 Klipper / Kalico
 
-Cream 是一个 Android 端的 Klipper / Kalico 宿主机应用，可以让你在任意一台支持 OTG 的 Android 5.0+ 设备上运行 [Klipper](https://github.com/KevinOConnor/klipper)（或 [Kalico](https://github.com/KalicoCrew/kalico)）宿主机软件（Klippy）。
+Kream 是一个 Android 端的 Klipper / Kalico 宿主机应用，可以让你在任意一台支持 OTG 的 Android 5.0+ 设备上运行 [Klipper](https://github.com/KevinOConnor/klipper)（或 [Kalico](https://github.com/KalicoCrew/kalico)）宿主机软件（Klippy）。
 
-Cream 是 [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper) 的硬分叉（hardfork），主要变化包括：
+Kream 是 [Cream](https://github.com/ProtonKicker/Cream) 的继任者，而 Cream 则是 [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper) 的硬分叉。Beam Klipper 最初由 [ProtonKicker](https://github.com/ProtonKicker) 创建。主要变化包括：
 
 - **全量 Kotlin 迁移**：核心应用包（`ru.ytkab0bp.beamklipper`）已从 Java 迁移到 Kotlin（71 个 Kotlin 源文件取代 34 个 Java 文件）。借助空安全、协程、不可变数据类等语言特性，消除了大量只能在运行时发现的崩溃类型，显著提升稳定性。详见 [KOTLIN_MIGRATION.md](KOTLIN_MIGRATION.md)。
 - **内置 Kalico 引擎**：捆绑 [Kalico](https://github.com/KalicoCrew/kalico)（Klipper 的社区维护分支），可在设置中一键切换 Klipper / Kalico 固件引擎，无需重新安装。
@@ -12,7 +12,7 @@ Cream 是 [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper) 的硬分�
 # 快速开始
 
 1. 从[这里](https://github.com/utkabobr/klipper/tree/prebuilt-v0.12.0)下载并安装 `firmware.bin`（或从[此仓库](https://github.com/utkabobr/klipper)自行构建以确保版本兼容）
-2. 从 [Releases 页面](https://github.com/ProtonKicker/Cream/releases/latest) 安装 APK
+2. 从 [Releases 页面](https://github.com/ProtonKicker/Kream/releases/latest) 安装 APK
 3. 允许所有需要的权限
 4. 添加打印机实例（列表中没有你的打印机时，选择 generic-***.cfg）
 5. 点击启动按钮
@@ -22,11 +22,11 @@ Cream 是 [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper) 的硬分�
 
 > 提示：若要使用 Kalico 引擎，请在「设置 → 引擎与界面」中把固件引擎切换为 Kalico，并使用 Kalico 固件树为你的主控板编译对应固件。
 
-# 安装 Cream 之后，设备还能当普通设备用吗？
+# 安装 Kream 之后，设备还能当普通设备用吗？
 
 **当然可以！**
 
-Cream 不会对 Android 系统做任何改动，它以普通 Android 应用的形式运行在用户空间。
+Kream 不会对 Android 系统做任何改动，它以普通 Android 应用的形式运行在用户空间。
 
 # IP:端口是什么？
 
@@ -42,7 +42,7 @@ Fluidd 推荐使用 mjpeg-**stream**（非 adaptive mjpeg）摄像头配置，Ma
 
 # 内置了什么？
 
-Cream 内置了：
+Kream 内置了：
 - [Klipper](https://github.com/KevinOConnor/klipper)
 - [Kalico](https://github.com/KalicoCrew/kalico)
 - [Moonraker](https://github.com/Arksine/moonraker)
@@ -54,7 +54,7 @@ Cream 内置了：
 
 # Android 扩展
 
-Cream 提供了一些附加扩展，用于控制内置功能。
+Kream 提供了一些附加扩展，用于控制内置功能。
 
 ### 摄像头
 
@@ -83,7 +83,7 @@ Cream 提供了一些附加扩展，用于控制内置功能。
 
 # 支持 Android TV 吗？
 
-支持，应该可以正常工作。但请注意，部分廉价电视盒子不支持直接设置 Cream 为桌面，需要先用 ADB 或 root 禁用系统桌面。
+支持，应该可以正常工作。但请注意，部分廉价电视盒子不支持直接设置 Kream 为桌面，需要先用 ADB 或 root 禁用系统桌面。
 
 # 用哪种 USB 集线器？
 
@@ -105,4 +105,4 @@ Cream 提供了一些附加扩展，用于控制内置功能。
 
 # 贡献
 
-欢迎提交 Pull Request。Cream 已经全面转向 Kotlin，新代码请使用 Kotlin 编写。
+欢迎提交 Pull Request。Kream 已经全面转向 Kotlin，新代码请使用 Kotlin 编写。
