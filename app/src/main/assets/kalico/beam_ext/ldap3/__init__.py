@@ -1,2 +1,0 @@
-SERVER = object
-Connection = object

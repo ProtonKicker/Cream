@@ -1,2 +1,0 @@
-MessageBus = object
-ProxyInterface = object

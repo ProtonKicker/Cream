@@ -1,1 +1,0 @@
-class CryptoError(Exception): pass
