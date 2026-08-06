@@ -14,7 +14,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     val usbNaming: StateFlow<Int> = AppState.usbNaming
     val cameraEnabled: StateFlow<Boolean> = AppState.cameraEnabled
     val appLanguage: StateFlow<String> = AppState.appLanguage
-    val appTheme: StateFlow<String> = AppState.appTheme
 
     fun cycleEngine() {
         val next = if (Prefs.engine == Prefs.ENGINE_KLIPPER) Prefs.ENGINE_KALICO else Prefs.ENGINE_KLIPPER
@@ -84,14 +83,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
             Prefs.LANGUAGE_CHINESE_SIMPLIFIED -> ru.ytkab0bp.beamklipper.R.string.LanguageChineseSimplified
             Prefs.LANGUAGE_CHINESE_TRADITIONAL -> ru.ytkab0bp.beamklipper.R.string.LanguageChineseTraditional
             else -> ru.ytkab0bp.beamklipper.R.string.LanguageSystem
-        }
-    )
-
-    fun themeTitle(theme: String): String = KlipperApp.INSTANCE.getString(
-        when (theme) {
-            Prefs.THEME_LIGHT -> ru.ytkab0bp.beamklipper.R.string.ThemeLight
-            Prefs.THEME_DARK -> ru.ytkab0bp.beamklipper.R.string.ThemeDark
-            else -> ru.ytkab0bp.beamklipper.R.string.ThemeSystem
         }
     )
 }

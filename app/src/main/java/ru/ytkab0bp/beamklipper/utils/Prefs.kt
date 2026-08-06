@@ -30,10 +30,6 @@ object Prefs {
     const val LANGUAGE_CHINESE_SIMPLIFIED = "zh-CN"
     const val LANGUAGE_CHINESE_TRADITIONAL = "zh-TW"
 
-    const val THEME_SYSTEM = "system"
-    const val THEME_LIGHT = "light"
-    const val THEME_DARK = "dark"
-
     private lateinit var mPrefs: SharedPreferences
 
     private fun getSafeString(key: String, default: String): String {
@@ -161,13 +157,6 @@ object Prefs {
             AppState.updateAppLanguage()
         }
 
-    var appTheme: String
-        get() = getSafeString("app_theme", THEME_SYSTEM)
-        set(value) {
-            mPrefs.edit().putString("app_theme", value).apply()
-            AppState.updateAppTheme()
-        }
-
     val cameraWidth: Int
         get() = getSafeInt("camera_width", 1280)
 
@@ -219,14 +208,5 @@ object Prefs {
             LocaleListCompat.forLanguageTags(appLanguage)
         }
         AppCompatDelegate.setApplicationLocales(locales)
-    }
-
-    fun applyAppTheme() {
-        val mode = when (appTheme) {
-            THEME_LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-            THEME_DARK -> AppCompatDelegate.MODE_NIGHT_YES
-            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
-        AppCompatDelegate.setDefaultNightMode(mode)
     }
 }

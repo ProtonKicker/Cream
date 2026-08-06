@@ -24,15 +24,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,12 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +51,8 @@ import ru.ytkab0bp.beamklipper.MainActivity
 import ru.ytkab0bp.beamklipper.R
 import ru.ytkab0bp.beamklipper.serial.KlipperProbeTable
 import ru.ytkab0bp.beamklipper.serial.UsbSerialManager
+import ru.ytkab0bp.beamklipper.ui.components.BrutalButton
+import ru.ytkab0bp.beamklipper.ui.components.BrutalSwitch
 import ru.ytkab0bp.beamklipper.ui.components.BrutalTile
 import ru.ytkab0bp.beamklipper.ui.state.SettingsViewModel
 import ru.ytkab0bp.beamklipper.ui.theme.Accent
@@ -265,58 +262,32 @@ fun ConfigScreen(
 
         Spacer(Modifier.height(28.dp))
         BrutalSectionHeader(stringResource(R.string.AppSettings))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            BrutalTile(
-                modifier = Modifier.weight(1f).height(140.dp),
-                background = Accent,
-                onClick = { showLanguage = true }
-            ) {
-                Column {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_globe_outline_28),
-                        contentDescription = null,
-                        tint = Ink,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(Modifier.height(20.dp))
-                    Text(
-                        text = stringResource(R.string.AppLanguage),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Ink
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = viewModel.languageTitle(appLanguage),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = InkMuted
-                    )
-                }
-            }
-            BrutalTile(
-                modifier = Modifier.weight(1f).height(140.dp),
-                background = Accent,
-                onClick = null
-            ) {
-                Column {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_moon_outline_28),
-                        contentDescription = null,
-                        tint = Ink,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(Modifier.height(20.dp))
-                    Text(
-                        text = stringResource(R.string.AppTheme),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Ink
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = stringResource(R.string.ThemeLight),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = InkMuted
-                    )
-                }
+        BrutalTile(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp),
+            background = Accent,
+            onClick = { showLanguage = true }
+        ) {
+            Column {
+                Icon(
+                    painter = painterResource(R.drawable.ic_globe_outline_28),
+                    contentDescription = null,
+                    tint = Ink,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(Modifier.height(20.dp))
+                Text(
+                    text = stringResource(R.string.AppLanguage),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Ink
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = viewModel.languageTitle(appLanguage),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkMuted
+                )
             }
         }
 
@@ -492,7 +463,7 @@ private fun BrutalSwitchRow(
                 color = Ink,
                 modifier = Modifier.weight(1f)
             )
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+            BrutalSwitch(checked = checked, onCheckedChange = onCheckedChange)
         }
     }
 }
@@ -505,31 +476,35 @@ private fun BrutalAlertDialog(
     confirmButton: @Composable () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null
 ) {
-    val shape = RectangleShape
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        containerColor = Color.Transparent,
-        titleContentColor = Ink,
-        textContentColor = InkMuted,
-        title = title,
-        text = {
-            Box {
-                Surface(
-                    shape = shape,
-                    color = Paper,
-                    modifier = Modifier
-                        .clip(shape)
-                        .border(2.dp, Ink, shape)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        Box(modifier = Modifier.padding(20.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Paper, RectangleShape)
+                    .border(2.dp, Ink, RectangleShape)
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    title()
+                    Spacer(Modifier.height(8.dp))
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         text()
+                    }
+                    Spacer(Modifier.height(20.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        dismissButton?.let {
+                            it()
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        confirmButton()
                     }
                 }
             }
-        },
-        confirmButton = confirmButton,
-        dismissButton = dismissButton
-    )
+        }
+    }
 }
 
 @Composable
@@ -558,7 +533,10 @@ private fun ListUsbDialog(context: Context, onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.ok), color = Ink) }
+            BrutalButton(
+                text = stringResource(android.R.string.ok),
+                onClick = onDismiss
+            )
         }
     )
 }
@@ -601,7 +579,10 @@ private fun LanguageDialog(onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel), color = Ink) }
+            BrutalButton(
+                text = stringResource(android.R.string.cancel),
+                onClick = onDismiss
+            )
         }
     )
 }

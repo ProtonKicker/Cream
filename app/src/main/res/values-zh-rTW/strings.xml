@@ -71,15 +71,9 @@
     <string name="ChangelogNext">下一步</string>
     <string name="ChangelogOK">確定</string>
 
-    <string name="AppTheme">應用主題</string>
-    <string name="ThemeSystem">跟隨系統</string>
-    <string name="ThemeLight">淺色</string>
-    <string name="ThemeDark">深色</string>
-
-    <string name="HelpTitle">說明與關於</string>
     <string name="About">關於 Beam Klipper</string>
     <string name="IntroTitle">使用方式</string>
-    <string name="IntroText">Beam Klipper 將您的 Android 手機變成一個獨立的 Klipper 或 Kalico 3D 列印機控制單元。\n\n1. 點擊「+」建立印表機設定檔並選擇 Klipper 設定範本。\n2. 點擊奶油色的執行按鈕以啟動引擎、Moonraker 和 Web UI 伺服器。\n3. 透過 Web 卡片開啟 Fluidd 或 Mainsail 來控制您的印表機。\n4. 使用設定面板切換引擎（Klipper/Kalico）、前端介面、語言和主題。\n\n所有處理都在您的裝置本機進行——無需雲端。</string>
+    <string name="IntroText">Beam Klipper 將您的 Android 手機變成一個獨立的 Klipper 或 Kalico 3D 列印機控制單元。\n\n1. 點擊「+」建立印表機設定檔並選擇 Klipper 設定範本。\n2. 點擊奶油色的執行按鈕以啟動引擎、Moonraker 和 Web UI 伺服器。\n3. 透過 Web 卡片開啟 Fluidd 或 Mainsail 來控制您的印表機。\n4. 使用設定面板切換引擎（Klipper/Kalico）和前端介面。\n\n所有處理都在您的裝置本機進行——無需雲端。</string>
     <string name="GitHubRepo">GitHub 儲存庫</string>
     <string name="OriginalBeamKlipper">原作：utkabobr 的 Beam Klipper</string>
     <string name="CreditsTitle">致謝</string>

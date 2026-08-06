@@ -9,30 +9,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,24 +33,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.ytkab0bp.beamklipper.KlipperApp
 import ru.ytkab0bp.beamklipper.KlipperInstance
 import ru.ytkab0bp.beamklipper.R
+import ru.ytkab0bp.beamklipper.ui.components.BrutalButton
+import ru.ytkab0bp.beamklipper.ui.components.BrutalSwitch
 import ru.ytkab0bp.beamklipper.ui.state.InstanceEditorViewModel
 import ru.ytkab0bp.beamklipper.ui.theme.Accent
 import ru.ytkab0bp.beamklipper.ui.theme.Ink
-import ru.ytkab0bp.beamklipper.ui.theme.InkOnAccent
+import ru.ytkab0bp.beamklipper.ui.theme.InkMuted
 import ru.ytkab0bp.beamklipper.ui.theme.Paper
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InstanceEditorSheet(
     editInstance: KlipperInstance?,
@@ -80,125 +74,127 @@ fun InstanceEditorSheet(
         if (editInstance == null) viewModel.loadForCreate() else viewModel.loadForEdit(editInstance)
     }
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val innerShape = RectangleShape
-
-    ModalBottomSheet(
+    Dialog(
         onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = Paper,
-        dragHandle = {
-            Box(
-                modifier = Modifier
-                    .padding(top = 12.dp, bottom = 8.dp)
-                    .width(40.dp)
-                    .height(4.dp)
-                    .clip(RectangleShape)
-                    .background(Ink)
-            )
-        },
-        shape = RectangleShape
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        ) {
-            Surface(
-                shape = innerShape,
-                color = Paper,
+        Box(modifier = Modifier.fillMaxSize().background(Paper)) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(2.dp, Ink, innerShape)
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars)
             ) {
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .verticalScroll(rememberScrollState())
-                        .padding(bottom = 28.dp, top = 16.dp)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .background(Paper, RectangleShape)
+                            .border(2.dp, Ink, RectangleShape)
+                            .clickable(onClick = onDismiss),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_left_28),
+                            contentDescription = stringResource(android.R.string.cancel),
+                            tint = Ink,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(Modifier.width(12.dp))
                     Text(
                         text = stringResource(if (editInstance == null) R.string.NewInstance else R.string.EditInstance),
                         style = MaterialTheme.typography.headlineMedium,
                         color = Ink
                     )
-                    Spacer(Modifier.height(20.dp))
+                }
 
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 28.dp, top = 4.dp)
+                ) {
                     Text(
                         text = stringResource(R.string.InstanceName),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Ink
+                        style = MaterialTheme.typography.titleSmall,
+                        color = InkMuted
                     )
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
+                    BasicTextField(
                         value = name,
                         onValueChange = { name = it },
-                        placeholder = { Text("e.g. Printer 1", color = Ink) },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Ink,
-                            unfocusedBorderColor = Ink,
-                            focusedTextColor = Ink,
-                            unfocusedTextColor = Ink,
-                            cursorColor = Ink,
-                            focusedContainerColor = Paper,
-                            unfocusedContainerColor = Paper
-                        ),
-                        shape = RectangleShape
+                        cursorBrush = SolidColor(Ink),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(color = Ink),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Paper, RectangleShape)
+                                    .border(2.dp, Ink, RectangleShape)
+                                    .padding(horizontal = 14.dp, vertical = 12.dp)
+                            ) {
+                                if (name.text.isEmpty()) {
+                                    Text(
+                                        text = "e.g. Printer 1",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = InkMuted
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        }
                     )
                     Spacer(Modifier.height(20.dp))
 
                     if (editInstance == null) {
                         Text(
                             text = stringResource(R.string.InstanceConfig),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = Ink
+                            style = MaterialTheme.typography.titleSmall,
+                            color = InkMuted
                         )
                         Spacer(Modifier.height(8.dp))
                         Box(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Paper, RectangleShape)
+                                .border(2.dp, Ink, RectangleShape)
+                                .clickable { if (filesList.isNotEmpty()) showConfigPicker = true }
                         ) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(2.dp, Ink, RectangleShape)
-                                    .clickable { if (filesList.isNotEmpty()) showConfigPicker = true },
-                                colors = CardDefaults.cardColors(containerColor = Paper),
-                                shape = RectangleShape
+                            Row(
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = configFile ?: stringResource(R.string.InstanceConfigHint),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = if (configFile != null) Ink else InkMuted,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Icon(
-                                        painterResource(R.drawable.ic_chevron_down_28),
-                                        contentDescription = null,
-                                        tint = Ink
-                                    )
-                                }
+                                Text(
+                                    text = configFile ?: stringResource(R.string.InstanceConfigHint),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = if (configFile != null) Ink else InkMuted,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    painterResource(R.drawable.ic_chevron_down_28),
+                                    contentDescription = null,
+                                    tint = Ink
+                                )
                             }
                         }
                         Spacer(Modifier.height(20.dp))
                     } else {
                         Box(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Paper, RectangleShape)
+                                .border(2.dp, Ink, RectangleShape)
+                                .clickable { openInstanceFolder(context, editInstance) }
                         ) {
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(2.dp, Ink, RectangleShape)
-                                    .clip(RectangleShape)
-                                    .clickable { openInstanceFolder(context, editInstance) }
-                                    .background(Paper)
-                                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -220,9 +216,8 @@ fun InstanceEditorSheet(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .background(Paper, RectangleShape)
                             .border(2.dp, Ink, RectangleShape)
-                            .clip(RectangleShape)
-                            .background(Paper)
                     ) {
                         Row(
                             modifier = Modifier
@@ -236,53 +231,89 @@ fun InstanceEditorSheet(
                                 color = Ink,
                                 modifier = Modifier.weight(1f)
                             )
-                            Switch(checked = autostart, onCheckedChange = { autostart = it })
+                            BrutalSwitch(checked = autostart, onCheckedChange = { autostart = it })
                         }
                     }
                     Spacer(Modifier.height(20.dp))
 
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Button(
-                            onClick = {
-                                var nameStr = name.text.trim()
-                                if (nameStr.isEmpty()) {
-                                    val currentInstances = KlipperApp.DATABASE.getInstances().map { it.name }
-                                    var n = 1
-                                    while (true) {
-                                        val candidate = "Printer $n"
-                                        if (!currentInstances.contains(candidate)) {
-                                            nameStr = candidate
-                                            break
-                                        }
-                                        n++
+                    BrutalButton(
+                        text = stringResource(if (editInstance == null) R.string.InstanceCreate else R.string.InstanceOK),
+                        onClick = {
+                            var nameStr = name.text.trim()
+                            if (nameStr.isEmpty()) {
+                                val currentInstances = KlipperApp.DATABASE.getInstances().map { it.name }
+                                var n = 1
+                                while (true) {
+                                    val candidate = "Printer $n"
+                                    if (!currentInstances.contains(candidate)) {
+                                        nameStr = candidate
+                                        break
                                     }
+                                    n++
                                 }
-                                if (editInstance == null && configFile.isNullOrEmpty()) {
-                                    error = context.getString(R.string.ErrorConfigEmpty)
-                                    return@Button
-                                }
-                                viewModel.save(nameStr, autostart) {
-                                    onDismiss()
-                                }
-                            },
-                            enabled = !saving,
-                            shape = RectangleShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Accent,
-                                contentColor = InkOnAccent,
-                                disabledContainerColor = Accent.copy(alpha = 0.5f),
-                                disabledContentColor = InkOnAccent.copy(alpha = 0.5f)
-                            ),
+                            }
+                            if (editInstance == null && configFile.isNullOrEmpty()) {
+                                error = context.getString(R.string.ErrorConfigEmpty)
+                                return@BrutalButton
+                            }
+                            viewModel.save(nameStr, autostart) {
+                                onDismiss()
+                            }
+                        },
+                        enabled = !saving,
+                        background = Accent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                    )
+                }
+            }
+        }
+    }
+
+    if (showConfigPicker) {
+        Dialog(onDismissRequest = { showConfigPicker = false }) {
+            Box(modifier = Modifier.padding(20.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper, RectangleShape)
+                        .border(2.dp, Ink, RectangleShape)
+                ) {
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            text = stringResource(R.string.InstanceConfig),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp)
-                                .border(2.dp, Ink, RectangleShape)
+                                .verticalScroll(rememberScrollState())
                         ) {
-                            Text(
-                                text = stringResource(if (editInstance == null) R.string.InstanceCreate else R.string.InstanceOK),
-                                style = MaterialTheme.typography.titleMedium
+                            filesList.forEach { f ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            viewModel.selectConfig(f)
+                                            showConfigPicker = false
+                                        }
+                                        .padding(vertical = 12.dp)
+                                ) {
+                                    Text(f, style = MaterialTheme.typography.bodyLarge, color = Ink)
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            BrutalButton(
+                                text = stringResource(android.R.string.cancel),
+                                onClick = { showConfigPicker = false }
                             )
                         }
                     }
@@ -291,48 +322,43 @@ fun InstanceEditorSheet(
         }
     }
 
-    if (showConfigPicker) {
-        AlertDialog(
-            onDismissRequest = { showConfigPicker = false },
-            title = { Text(stringResource(R.string.InstanceConfig)) },
-            text = {
-                Column {
-                    filesList.forEach { f ->
+    error?.let {
+        Dialog(onDismissRequest = { error = null }) {
+            Box(modifier = Modifier.padding(20.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper, RectangleShape)
+                        .border(2.dp, Ink, RectangleShape)
+                ) {
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            text = stringResource(R.string.Error),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Ink
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = InkMuted
+                        )
+                        Spacer(Modifier.height(24.dp))
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    viewModel.selectConfig(f)
-                                    showConfigPicker = false
-                                }
-                                .padding(vertical = 12.dp)
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            Text(f, style = MaterialTheme.typography.bodyLarge)
+                            BrutalButton(
+                                text = stringResource(android.R.string.ok),
+                                onClick = { error = null }
+                            )
                         }
                     }
                 }
-            },
-            confirmButton = {
-                TextButton(onClick = { showConfigPicker = false }) {
-                    Text(stringResource(android.R.string.cancel))
-                }
             }
-        )
-    }
-
-    error?.let {
-        AlertDialog(
-            onDismissRequest = { error = null },
-            title = { Text(stringResource(R.string.Error)) },
-            text = { Text(it) },
-            confirmButton = {
-                TextButton(onClick = { error = null }) { Text(stringResource(android.R.string.ok)) }
-            }
-        )
+        }
     }
 }
-
-private val InkMuted = androidx.compose.ui.graphics.Color(0xFF555555)
 
 private fun openInstanceFolder(context: android.content.Context, instance: KlipperInstance) {
     val uri = android.provider.DocumentsContract.buildRootUri("ru.ytkab0bp.beamklipper", instance.id)

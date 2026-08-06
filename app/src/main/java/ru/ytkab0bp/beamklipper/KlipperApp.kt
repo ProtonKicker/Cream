@@ -34,7 +34,6 @@ class KlipperApp : MultiDexApplication() {
         Prefs.init(this)
         DATABASE = BeamDB(this)
         EventBus.registerImpl(this)
-        Prefs.applyAppTheme()
         Prefs.applyAppLanguage()
 
         hasUpdateInfo = try {

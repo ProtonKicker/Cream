@@ -21,13 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,9 +44,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import ru.ytkab0bp.beamklipper.KlipperApp
 import ru.ytkab0bp.beamklipper.PermissionsChecker
 import ru.ytkab0bp.beamklipper.R
+import ru.ytkab0bp.beamklipper.ui.components.BrutalButton
+import ru.ytkab0bp.beamklipper.ui.components.BrutalSwitch
 import ru.ytkab0bp.beamklipper.ui.theme.Accent
 import ru.ytkab0bp.beamklipper.ui.theme.Ink
-import ru.ytkab0bp.beamklipper.ui.theme.InkOnAccent
 import ru.ytkab0bp.beamklipper.ui.theme.Paper
 
 @Composable
@@ -85,7 +81,8 @@ fun PermissionScreen(onNext: () -> Unit) {
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .background(Paper)
             .verticalScroll(rememberScrollState())
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -93,11 +90,10 @@ fun PermissionScreen(onNext: () -> Unit) {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Surface(
-                shape = cardShape,
-                color = Paper,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(Paper, cardShape)
                     .border(2.dp, Ink, cardShape)
             ) {
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -175,23 +171,14 @@ fun PermissionScreen(onNext: () -> Unit) {
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
-                        Button(
+                        BrutalButton(
+                            text = stringResource(R.string.Next),
                             onClick = onNext,
-                            shape = RectangleShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Accent,
-                                contentColor = InkOnAccent
-                            ),
+                            background = Accent,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(52.dp)
-                                .border(2.dp, Ink, RectangleShape)
-                        ) {
-                            Text(
-                                stringResource(R.string.Next),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
+                        )
                     }
                 }
             }
@@ -228,11 +215,7 @@ private fun PermissionRow(
                 modifier = Modifier.weight(1f)
             )
             Spacer(Modifier.width(12.dp))
-            Switch(
-                checked = checked,
-                onCheckedChange = null,
-                enabled = false
-            )
+            BrutalSwitch(checked = checked, onCheckedChange = null)
         }
     }
 }

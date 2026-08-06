@@ -25,12 +25,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -54,6 +51,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.ytkab0bp.beamklipper.KlipperInstance
 import ru.ytkab0bp.beamklipper.R
 import ru.ytkab0bp.beamklipper.service.WebService
+import ru.ytkab0bp.beamklipper.ui.components.BrutalButton
+import ru.ytkab0bp.beamklipper.ui.components.BrutalTextButton
 import ru.ytkab0bp.beamklipper.ui.components.BrutalTile
 import ru.ytkab0bp.beamklipper.ui.state.MainViewModel
 import ru.ytkab0bp.beamklipper.ui.theme.Accent
@@ -101,7 +100,11 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             stickyHeader(key = "web", contentType = "web") {
-                Surface(color = Paper) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper)
+                ) {
                     Box(Modifier.padding(top = 16.dp, bottom = 12.dp)) {
                         val isFluidd = webFrontend == Prefs.FRONTEND_FLUIDD
                         val running = webState == KlipperInstance.State.RUNNING
@@ -247,25 +250,24 @@ fun HomeScreen(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.End
                                     ) {
-                                        Surface(
-                                            onClick = onToggleInst,
-                                            enabled = stateVal != KlipperInstance.State.STARTING && stateVal != KlipperInstance.State.STOPPING,
-                                            shape = RectangleShape,
-                                            color = toggleBg,
-                                            contentColor = Ink,
+                                        Box(
                                             modifier = Modifier
                                                 .size(40.dp)
-                                                .border(2.dp, Ink, RectangleShape),
-                                            tonalElevation = 0.dp,
-                                            shadowElevation = 0.dp
+                                                .clip(RectangleShape)
+                                                .background(toggleBg, RectangleShape)
+                                                .border(2.dp, Ink, RectangleShape)
+                                                .clickable(
+                                                    enabled = stateVal != KlipperInstance.State.STARTING && stateVal != KlipperInstance.State.STOPPING,
+                                                    onClick = onToggleInst
+                                                ),
+                                            contentAlignment = Alignment.Center
                                         ) {
-                                            Box(contentAlignment = Alignment.Center) {
-                                                Icon(
-                                                    painterResource(if (stateVal == KlipperInstance.State.RUNNING || stateVal == KlipperInstance.State.STOPPING) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(20.dp)
-                                                )
-                                            }
+                                            Icon(
+                                                painterResource(if (stateVal == KlipperInstance.State.RUNNING || stateVal == KlipperInstance.State.STOPPING) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
+                                                contentDescription = null,
+                                                tint = Ink,
+                                                modifier = Modifier.size(20.dp)
+                                            )
                                         }
                                     }
                                 }
@@ -367,24 +369,18 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            TextButton(onClick = { deleteInstance = null }) {
-                                Text(
-                                    stringResource(android.R.string.cancel),
-                                    color = Ink
-                                )
-                            }
+                            BrutalTextButton(
+                                text = stringResource(android.R.string.cancel),
+                                onClick = { deleteInstance = null }
+                            )
                             Spacer(Modifier.width(8.dp))
-                            TextButton(
+                            BrutalButton(
+                                text = stringResource(android.R.string.ok),
                                 onClick = {
                                     mainViewModel.delete(inst)
                                     deleteInstance = null
                                 }
-                            ) {
-                                Text(
-                                    stringResource(android.R.string.ok),
-                                    color = Ink
-                                )
-                            }
+                            )
                         }
                     }
                 }
@@ -419,12 +415,10 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            TextButton(onClick = { noFreeSlots = false }) {
-                                Text(
-                                    stringResource(android.R.string.ok),
-                                    color = Ink
-                                )
-                            }
+                            BrutalButton(
+                                text = stringResource(android.R.string.ok),
+                                onClick = { noFreeSlots = false }
+                            )
                         }
                     }
                 }

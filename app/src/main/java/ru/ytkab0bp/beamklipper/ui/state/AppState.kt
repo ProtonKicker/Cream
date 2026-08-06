@@ -68,16 +68,12 @@ object AppState {
     private val _appLanguage = MutableStateFlow(Prefs.appLanguage)
     val appLanguage: StateFlow<String> = _appLanguage.distinct()
 
-    private val _appTheme = MutableStateFlow(Prefs.appTheme)
-    val appTheme: StateFlow<String> = _appTheme.distinct()
-
     private var started = false
 
     fun start() {
         if (started) return
         started = true
         _appLanguage.value = Prefs.appLanguage
-        _appTheme.value = Prefs.appTheme
         _usbNaming.value = Prefs.usbDeviceNaming
         _cameraEnabled.value = Prefs.isCameraEnabled
         KlipperApp.EVENT_BUS.registerListener(this)
@@ -146,9 +142,5 @@ object AppState {
 
     fun updateAppLanguage() {
         _appLanguage.value = Prefs.appLanguage
-    }
-
-    fun updateAppTheme() {
-        _appTheme.value = Prefs.appTheme
     }
 }

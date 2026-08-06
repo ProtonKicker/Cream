@@ -1,7 +1,9 @@
 package ru.ytkab0bp.beamklipper.ui
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -11,6 +13,7 @@ import ru.ytkab0bp.beamklipper.PermissionsChecker
 import ru.ytkab0bp.beamklipper.ui.screens.PermissionScreen
 import ru.ytkab0bp.beamklipper.ui.state.MainViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreamApp(
     isCurrentLauncher: Boolean,
@@ -18,8 +21,8 @@ fun CreamApp(
 ) {
     var permissionBlocked by rememberSaveable { mutableStateOf(PermissionsChecker.needBlockStart()) }
 
-    Crossfade(targetState = permissionBlocked, label = "gate") { blocked ->
-        if (blocked) {
+    CompositionLocalProvider(LocalRippleConfiguration provides null) {
+        if (permissionBlocked) {
             PermissionScreen(
                 onNext = {
                     permissionBlocked = false
