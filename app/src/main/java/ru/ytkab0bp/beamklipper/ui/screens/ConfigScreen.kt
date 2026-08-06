@@ -522,7 +522,7 @@ private fun ListUsbDialog(context: Context, onDismiss: () -> Unit) {
     }
     BrutalAlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.ListUSBTitle)) },
+        title = { Text(stringResource(R.string.ListUSBTitle), style = MaterialTheme.typography.titleLarge, color = Ink) },
         text = {
             if (list.isEmpty()) {
                 Text(stringResource(R.string.ListUSBNoDevices), color = Ink)
@@ -552,7 +552,7 @@ private fun LanguageDialog(onDismiss: () -> Unit) {
     )
     BrutalAlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.AppLanguage)) },
+        title = { Text(stringResource(R.string.AppLanguage), style = MaterialTheme.typography.titleLarge, color = Ink) },
         text = {
             Column {
                 options.forEachIndexed { index, label ->

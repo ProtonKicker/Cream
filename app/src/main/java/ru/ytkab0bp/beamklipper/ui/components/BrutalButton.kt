@@ -48,7 +48,8 @@ fun BrutalButton(
             text = text,
             style = MaterialTheme.typography.titleSmall,
             color = if (enabled) contentColor else contentColor.copy(alpha = 0.6f),
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
     }
 }
