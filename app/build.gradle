@@ -10,6 +10,7 @@ plugins {
     id 'com.android.application'
     id 'com.chaquo.python'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 apply plugin: 'kotlin-kapt'
@@ -117,6 +118,7 @@ android {
     buildFeatures {
         aidl true
         buildConfig true
+        compose true
     }
 
     kapt {
@@ -125,6 +127,12 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += [
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:strongSkipping=true",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${buildDir}/compose_reports"
+        ]
     }
 
     applicationVariants.all { variant ->
@@ -143,7 +151,6 @@ dependencies {
     implementation 'com.goterl:lazysodium-android:5.1.0@aar'
     implementation 'org.java-websocket:Java-WebSocket:1.6.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'org.tukaani:xz:1.9'
     implementation 'org.kamranzafar:jtar:2.3'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
@@ -152,19 +159,34 @@ dependencies {
     implementation 'com.github.androidmads:QRGenerator:1.0.5'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
+
+    def composeBom = platform('androidx.compose:compose-bom:2024.09.03')
+    implementation composeBom
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-core'
+    implementation 'androidx.compose.material:material-icons-extended'
+    implementation 'androidx.activity:activity-compose:1.10.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
+    implementation 'androidx.navigation:navigation-compose:2.8.4'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.3'
 
     implementation project(":eventbus")
     implementation project(":eventbus_api")
     kapt project(":eventbus_processor")
 
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
 
     constraints {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24") {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.21") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
         }
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24") {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21") {
             because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
         }
     }

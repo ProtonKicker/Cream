@@ -81,6 +81,9 @@
     <string name="IntroTitle">使用方式</string>
     <string name="IntroText">Beam Klipper 將您的 Android 手機變成一個獨立的 Klipper 或 Kalico 3D 列印機控制單元。\n\n1. 點擊「+」建立印表機設定檔並選擇 Klipper 設定範本。\n2. 點擊奶油色的執行按鈕以啟動引擎、Moonraker 和 Web UI 伺服器。\n3. 透過 Web 卡片開啟 Fluidd 或 Mainsail 來控制您的印表機。\n4. 使用設定面板切換引擎（Klipper/Kalico）、前端介面、語言和主題。\n\n所有處理都在您的裝置本機進行——無需雲端。</string>
     <string name="GitHubRepo">GitHub 儲存庫</string>
+    <string name="OriginalBeamKlipper">原作：utkabobr 的 Beam Klipper</string>
+    <string name="CreditsTitle">致謝</string>
+    <string name="CreditsText">Cream 是 Beam Klipper 的深度主題化 Kotlin 硬分叉，原版由 utkabobr 創作。沒有他的工作就不會有這個應用。</string>
     <string name="AppSettings">應用設定</string>
     <string name="EngineFrontend">引擎與介面</string>
     <string name="QuickStart">快速入門</string>

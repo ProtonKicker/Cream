@@ -83,6 +83,9 @@
     <string name="IntroTitle">Как пользоваться</string>
     <string name="IntroText">Beam Klipper превращает ваш Android-телефон в автономный блок управления 3D-принтером на базе Klipper или Kalico.\n\n1. Нажмите «+», чтобы создать профиль принтера и выбрать шаблон конфига Klipper.\n2. Нажмите кремовую кнопку Пуск, чтобы запустить движок, Moonraker и веб-сервер.\n3. Откройте Fluidd или Mainsail через карточку веб-интерфейса для управления принтером.\n4. Используйте панель настроек для переключения движков (Klipper/Kalico), фронтендов, языка и темы.\n\nВся обработка происходит локально на вашем устройстве — облако не требуется.</string>
     <string name="GitHubRepo">Репозиторий GitHub</string>
+    <string name="OriginalBeamKlipper">Оригинал: Beam Klipper от utkabobr</string>
+    <string name="CreditsTitle">Благодарности</string>
+    <string name="CreditsText">Cream — это глубоко тематизированный Kotlin-хардфорк Beam Klipper, изначально созданного utkabobr. Без его работы этого приложения не существовало бы.</string>
     <string name="AppSettings">Настройки приложения</string>
     <string name="EngineFrontend">Движок и веб-интерфейс</string>
     <string name="QuickStart">Быстрый старт</string>

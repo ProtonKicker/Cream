@@ -13,6 +13,7 @@ import ru.ytkab0bp.beamklipper.KlipperApp
 import ru.ytkab0bp.beamklipper.events.EngineChangedEvent
 import ru.ytkab0bp.beamklipper.events.WebFrontendChangedEvent
 import ru.ytkab0bp.beamklipper.serial.UsbSerialManager
+import ru.ytkab0bp.beamklipper.ui.state.AppState
 
 object Prefs {
     const val USB_DEVICE_NAMING_BY_PATH = 0
@@ -157,12 +158,14 @@ object Prefs {
         get() = getSafeString("app_language", LANGUAGE_SYSTEM)
         set(value) {
             mPrefs.edit().putString("app_language", value).apply()
+            AppState.updateAppLanguage()
         }
 
     var appTheme: String
         get() = getSafeString("app_theme", THEME_SYSTEM)
         set(value) {
             mPrefs.edit().putString("app_theme", value).apply()
+            AppState.updateAppTheme()
         }
 
     val cameraWidth: Int
@@ -177,7 +180,10 @@ object Prefs {
     var isCameraEnabled: Boolean
         get() = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || KlipperApp.INSTANCE.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
                 getSafeBoolean("camera_enabled", false)
-        set(value) { mPrefs.edit().putBoolean("camera_enabled", value).apply() }
+        set(value) {
+            mPrefs.edit().putBoolean("camera_enabled", value).apply()
+            AppState.updateCameraEnabled()
+        }
 
     var usbDeviceNaming: Int
         get() = getSafeInt("usb_device_naming", USB_DEVICE_NAMING_BY_PATH)
@@ -185,6 +191,7 @@ object Prefs {
             UsbSerialManager.disconnectAll()
             mPrefs.edit().putInt("usb_device_naming", value).apply()
             UsbSerialManager.connectAll()
+            AppState.updateUsbNaming()
         }
 
     var isFlashlightEnabled: Boolean

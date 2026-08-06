@@ -218,7 +218,7 @@ class KlipperInstance {
     }
 
     companion object {
-        const val SLOTS_COUNT = 4
+        const val SLOTS_COUNT = 32
         private const val TAG = "beam_instance"
 
         private val mainHandler = Handler(Looper.getMainLooper())
