@@ -81,28 +81,31 @@ open class BaseMoonrakerService(private val num: Int) : BasePythonService() {
             val moonrakerCfg = File(config, "moonraker.conf")
             if (!moonrakerCfg.exists()) {
                 moonrakerCfg.parentFile?.mkdirs()
-                var freePort = 7125
-                for (otherInst in KlipperInstance.getInstances()) {
-                    val f = File(otherInst.publicDirectory, "config/moonraker.conf")
-                    if (f.exists()) {
-                        val str = readString(f)
-                        val m = MOONRAKER_PORT_PATTERN.matcher(str)
-                        if (m.find()) {
-                            val otherPort = Integer.parseInt(m.group(1))
-                            if (otherPort == freePort) {
-                                freePort++
-                            }
+                KlipperApp.withMoonrakerPortLock(this) {
+                    val used = HashSet<Int>()
+                    for (otherInst in KlipperInstance.getInstances()) {
+                        val f = File(otherInst.publicDirectory, "config/moonraker.conf")
+                        if (f.exists()) {
+                            try {
+                                val m = MOONRAKER_PORT_PATTERN.matcher(readString(f))
+                                if (m.find()) {
+                                    used.add(m.group(1).toInt())
+                                }
+                            } catch (_: Throwable) {}
                         }
                     }
-                }
-
-                FileOutputStream(moonrakerCfg).use { fos ->
-                    fos.write(BundleInstaller.readString(KlipperApp.INSTANCE.assets, "moonraker/default.conf")
-                        .replace("\${KLIPPY_UDS}", socket.absolutePath)
-                        .replace("\${MOONRAKER_PORT}", freePort.toString())
-                        .replace("\${TIMELAPSE_FRAME_PATH}", tempFramesDir.absolutePath)
-                        .replace("\${TIMELAPSE_OUTPUT}", timelapseOutputDir.absolutePath)
-                        .toByteArray(StandardCharsets.UTF_8))
+                    var freePort = 7125
+                    while (used.contains(freePort)) {
+                        freePort++
+                    }
+                    FileOutputStream(moonrakerCfg).use { fos ->
+                        fos.write(BundleInstaller.readString(KlipperApp.INSTANCE.assets, "moonraker/default.conf")
+                            .replace("\${KLIPPY_UDS}", socket.absolutePath)
+                            .replace("\${MOONRAKER_PORT}", freePort.toString())
+                            .replace("\${TIMELAPSE_FRAME_PATH}", tempFramesDir.absolutePath)
+                            .replace("\${TIMELAPSE_OUTPUT}", timelapseOutputDir.absolutePath)
+                            .toByteArray(StandardCharsets.UTF_8))
+                    }
                 }
             }
             val timelapseCfg = File(config, "timelapse.cfg")

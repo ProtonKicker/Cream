@@ -14,13 +14,3 @@ val InkOnOk = Color(0xFFFFFFFF)
 val Warn = Color(0xFFD99A1B)
 val InkOnWarn = Color(0xFF171512)
 val StripeLine = Color(0x1A171512)
-
-fun cardColor(index: Int): Color {
-    val idx = Math.floorMod(Math.abs(index), 4)
-    return when (idx) {
-        0 -> Paper
-        1 -> PaperAlt
-        2 -> Paper
-        else -> PaperAlt
-    }
-}

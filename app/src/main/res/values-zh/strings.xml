@@ -30,8 +30,7 @@
     <string name="NewInstance">新建配置</string>
     <string name="EditInstance">编辑配置</string>
     <string name="EditOpenDirectory">打开配置文件夹</string>
-    <string name="NoFreeSlots">没有空闲槽位</string>
-    <string name="NoFreeSlotsDescription">同时最多只能运行 %d 个配置</string>
+    <string name="NoFreeSlotsDescription">同时最多只能创建并运行 %d 个配置。</string>
     <string name="Error">错误</string>
     <string name="ErrorNameEmpty">名称不能为空</string>
     <string name="ErrorConfigEmpty">请选择配置</string>

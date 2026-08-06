@@ -31,8 +31,7 @@
     <string name="NewInstance">New profile</string>
     <string name="EditInstance">Edit profile</string>
     <string name="EditOpenDirectory">Open profile folder</string>
-    <string name="NoFreeSlots">No free slots</string>
-    <string name="NoFreeSlotsDescription">Only up to %d profiles can be running at the same time</string>
+    <string name="NoFreeSlotsDescription">Only %d profiles can be created and run at the same time.</string>
     <string name="Error">Error</string>
     <string name="ErrorNameEmpty">Name can not be empty</string>
     <string name="ErrorConfigEmpty">Select a config</string>

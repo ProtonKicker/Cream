@@ -31,7 +31,7 @@ fun BrutalButton(
     enabled: Boolean = true,
     background: Color = Accent,
     contentColor: Color = InkOnAccent,
-    minHeight: Dp = 48.dp
+    minHeight: Dp = 40.dp
 ) {
     val shape = RectangleShape
     val bg = if (enabled) background else background.copy(alpha = 0.4f)

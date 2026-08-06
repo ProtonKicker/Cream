@@ -59,7 +59,6 @@ import ru.ytkab0bp.beamklipper.ui.theme.Accent
 import ru.ytkab0bp.beamklipper.ui.theme.Ink
 import ru.ytkab0bp.beamklipper.ui.theme.InkMuted
 import ru.ytkab0bp.beamklipper.ui.theme.Paper
-import ru.ytkab0bp.beamklipper.ui.theme.cardColor
 import ru.ytkab0bp.beamklipper.utils.Prefs
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -91,30 +90,26 @@ fun HomeScreen(
     val listState = rememberLazyListState()
 
     Box(modifier = modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = listState,
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                start = 20.dp, top = 0.dp, end = 20.dp, bottom = 140.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            stickyHeader(key = "web", contentType = "web") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Paper)
-                ) {
-                    Box(Modifier.padding(top = 16.dp, bottom = 12.dp)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Paper)
+            ) {
+                Box(Modifier.padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 12.dp)) {
                         val isFluidd = webFrontend == Prefs.FRONTEND_FLUIDD
                         val running = webState == KlipperInstance.State.RUNNING
                         val webBg = if (running) Accent else Paper
-                        BrutalTile(
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .heightIn(min = 64.dp),
-                            background = webBg,
-                            onClick = if (running) ({ openWebFrontend(context) }) else null
+                                .height(64.dp)
+                                .clip(RectangleShape)
+                                .background(webBg, RectangleShape)
+                                .border(2.dp, Ink, RectangleShape)
+                                .clickable(enabled = running, onClick = { openWebFrontend(context) })
+                                .padding(16.dp),
+                            contentAlignment = Alignment.CenterStart
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
@@ -147,14 +142,23 @@ fun HomeScreen(
                         }
                     }
                 }
-            }
-
-            item(key = "instances-label", contentType = "label") {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    start = 20.dp, top = 0.dp, end = 20.dp, bottom = 140.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                stickyHeader(key = "instances-label", contentType = "label") {
                 Text(
                     text = "INSTANCES",
                     style = MaterialTheme.typography.labelMedium,
                     color = Ink,
-                    modifier = Modifier.padding(start = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Paper)
+                        .padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
                 )
             }
 
@@ -194,7 +198,7 @@ fun HomeScreen(
                                     else -> mainViewModel.toggle(inst)
                                 }
                             })
-                            val instBg = cardColor((inst.id ?: inst.name).hashCode())
+                            val instBg = Paper
                             val toggleBg = when (stateVal) {
                                 KlipperInstance.State.RUNNING, KlipperInstance.State.STOPPING -> Accent
                                 else -> Paper
@@ -233,17 +237,26 @@ fun HomeScreen(
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier.fillMaxWidth()
                                     )
-                                    if (stateVal == KlipperInstance.State.STARTING || stateVal == KlipperInstance.State.STOPPING || stateVal == KlipperInstance.State.RUNNING) {
-                                        val statusText = when (stateVal) {
-                                            KlipperInstance.State.STARTING -> stringResource(R.string.InstanceStarting)
-                                            KlipperInstance.State.STOPPING -> stringResource(R.string.InstanceStopping)
-                                            else -> "Running"
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(16.dp)
+                                    ) {
+                                        if (stateVal == KlipperInstance.State.STARTING || stateVal == KlipperInstance.State.STOPPING || stateVal == KlipperInstance.State.RUNNING) {
+                                            val statusText = when (stateVal) {
+                                                KlipperInstance.State.STARTING -> stringResource(R.string.InstanceStarting)
+                                                KlipperInstance.State.STOPPING -> stringResource(R.string.InstanceStopping)
+                                                else -> "Running"
+                                            }
+                                            Text(
+                                                text = statusText,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = InkMuted,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
                                         }
-                                        Text(
-                                            text = statusText,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = InkMuted
-                                        )
                                     }
                                     Spacer(Modifier.height(8.dp))
                                     Row(
@@ -280,6 +293,7 @@ fun HomeScreen(
                 }
             }
         }
+        }
 
         Row(
             modifier = Modifier
@@ -298,12 +312,16 @@ fun HomeScreen(
                         .background(Accent, fabShape)
                         .border(2.dp, Ink, fabShape)
                         .let {
-                            it.clickable(
-                                onClick = {
-                                    editorInstance = null
-                                    editorVisible = true
-                                }
-                            )
+                                it.clickable(
+                                    onClick = {
+                                        if (instances.size >= KlipperInstance.SLOTS_COUNT) {
+                                            noFreeSlots = true
+                                        } else {
+                                            editorInstance = null
+                                            editorVisible = true
+                                        }
+                                    }
+                                )
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -400,14 +418,8 @@ fun HomeScreen(
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
-                            text = stringResource(R.string.NoFreeSlots),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Ink
-                        )
-                        Spacer(Modifier.height(16.dp))
-                        Text(
                             text = stringResource(R.string.NoFreeSlotsDescription, KlipperInstance.SLOTS_COUNT),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Ink
                         )
                         Spacer(Modifier.height(24.dp))

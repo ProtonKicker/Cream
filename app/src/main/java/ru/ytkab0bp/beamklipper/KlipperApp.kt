@@ -90,6 +90,7 @@ class KlipperApp : MultiDexApplication() {
     companion object {
         private const val CHAQUOPY_SEED_MARKER = ".chaquopy_seed_v1"
         private const val CHAQUOPY_LOCK_NAME = ".chaquopy_lock"
+        private const val MOONRAKER_LOCK_NAME = ".moonraker_port_lock"
 
         fun withChaquopyLock(ctx: Context, action: () -> Unit) {
             val lockFile = File(ctx.filesDir, CHAQUOPY_LOCK_NAME)
@@ -102,6 +103,37 @@ class KlipperApp : MultiDexApplication() {
             } finally {
                 try { lock?.release() } catch (_: Throwable) {}
                 try { raf?.close() } catch (_: Throwable) {}
+            }
+        }
+
+        fun withMoonrakerPortLock(ctx: Context, action: () -> Unit) {
+            val lockFile = File(ctx.filesDir, MOONRAKER_LOCK_NAME)
+            val deadline = System.currentTimeMillis() + 15_000
+            var acquired = false
+            while (System.currentTimeMillis() < deadline) {
+                try {
+                    if (lockFile.createNewFile()) {
+                        acquired = true
+                        break
+                    }
+                } catch (_: Throwable) {}
+                try {
+                    if (System.currentTimeMillis() - lockFile.lastModified() > 10_000) {
+                        lockFile.delete()
+                    }
+                } catch (_: Throwable) {}
+                try { Thread.sleep(30) } catch (_: InterruptedException) { break }
+            }
+            if (!acquired) {
+                try { lockFile.delete() } catch (_: Throwable) {}
+                try { acquired = lockFile.createNewFile() } catch (_: Throwable) {}
+            }
+            try {
+                action()
+            } finally {
+                if (acquired) {
+                    try { lockFile.delete() } catch (_: Throwable) {}
+                }
             }
         }
 

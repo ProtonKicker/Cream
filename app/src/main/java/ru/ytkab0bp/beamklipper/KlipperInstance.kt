@@ -218,7 +218,7 @@ class KlipperInstance {
     }
 
     companion object {
-        const val SLOTS_COUNT = 4
+        const val SLOTS_COUNT = 10
         private const val TAG = "beam_instance"
 
         private val mainHandler = Handler(Looper.getMainLooper())
@@ -257,7 +257,9 @@ class KlipperInstance {
                     inst.moonrakerIntent = was.moonrakerIntent
                     inst.slot = was.slot
                     slots.remove(was)
-                    slots[inst] = inst.slot
+                    if (was.state != State.IDLE) {
+                        slots[inst] = was.slot
+                    }
                 }
             }
             instances = loaded

@@ -30,8 +30,7 @@
     <string name="NewInstance">Новый профиль</string>
     <string name="EditInstance">Редактирование профиля</string>
     <string name="EditOpenDirectory">Открыть папку профиля</string>
-    <string name="NoFreeSlots">Нет свободных слотов</string>
-    <string name="NoFreeSlotsDescription">Одновременно может быть запущено не более %d экземпляров.</string>
+    <string name="NoFreeSlotsDescription">Одновременно можно создать и запустить не более %d профилей.</string>
     <string name="Error">Ошибка</string>
     <string name="ErrorNameEmpty">Имя не может быть пустым</string>
     <string name="ErrorConfigEmpty">Выберите конфиг</string>

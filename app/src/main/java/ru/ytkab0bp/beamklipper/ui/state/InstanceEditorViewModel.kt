@@ -59,6 +59,11 @@ class InstanceEditorViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
+        if (runCatching { KlipperApp.DATABASE.getInstances().size }.getOrDefault(0) >= KlipperInstance.SLOTS_COUNT) {
+            onDone()
+            return
+        }
+
         if (_configFile.value.isNullOrEmpty()) {
             onDone()
             return
