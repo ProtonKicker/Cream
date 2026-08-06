@@ -45,13 +45,14 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="true"/>
+        android:required="false"/>
 
     <application
         android:name=".KlipperApp"
         android:label="@string/AppName"
         android:allowBackup="true"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31"
         android:icon="@mipmap/icon"
         android:banner="@mipmap/icon"

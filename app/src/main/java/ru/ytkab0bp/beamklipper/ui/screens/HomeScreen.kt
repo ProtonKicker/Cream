@@ -24,10 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -50,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -182,7 +177,7 @@ fun HomeScreen(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(92.dp)
             ) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.NewInstance), modifier = Modifier.size(40.dp))
+                Icon(painterResource(R.drawable.ic_add_outline_28), contentDescription = stringResource(R.string.NewInstance), modifier = Modifier.size(40.dp))
             }
             if (instances.isNotEmpty()) {
                 FloatingActionButton(
@@ -193,7 +188,7 @@ fun HomeScreen(
                     modifier = Modifier.size(92.dp)
                 ) {
                     Icon(
-                        if (anyRunning) Icons.Filled.Stop else Icons.Filled.PlayArrow,
+                        painterResource(if (anyRunning) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
                         contentDescription = null,
                         modifier = Modifier.size(40.dp)
                     )
@@ -390,7 +385,7 @@ private fun InstanceCard(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        if (state == KlipperInstance.State.RUNNING || state == KlipperInstance.State.STOPPING) Icons.Filled.Stop else Icons.Filled.PlayArrow,
+                        painterResource(if (state == KlipperInstance.State.RUNNING || state == KlipperInstance.State.STOPPING) R.drawable.ic_stop_24 else R.drawable.ic_play_28),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)
                     )

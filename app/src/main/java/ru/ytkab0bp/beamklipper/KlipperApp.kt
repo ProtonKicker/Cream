@@ -28,61 +28,6 @@ import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 
 class KlipperApp : MultiDexApplication() {
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        try {
-            val apkFile = File(applicationInfo.sourceDir)
-            val loader = javaClass.classLoader ?: return
-            val secondaryBytes = readSecondaryDexBytes(apkFile) ?: return
-
-            val inmemLoader = dalvik.system.InMemoryDexClassLoader(
-                java.nio.ByteBuffer.allocateDirect(secondaryBytes.size).put(secondaryBytes).also { it.flip() },
-                loader
-            )
-
-            var pathListClass: Class<*> = loader::class.java
-            while (pathListClass != null && pathListClass.declaredFields.none { it.name == "pathList" }) {
-                pathListClass = pathListClass.superclass
-            }
-            val pathListField = pathListClass!!.getDeclaredField("pathList")
-            pathListField.isAccessible = true
-            val pathList = pathListField.get(loader)
-
-            var localPathListClass: Class<*> = inmemLoader::class.java
-            while (localPathListClass != null && localPathListClass.declaredFields.none { it.name == "pathList" }) {
-                localPathListClass = localPathListClass.superclass
-            }
-            val localPathListField = localPathListClass!!.getDeclaredField("pathList")
-            localPathListField.isAccessible = true
-            val localPathList = localPathListField.get(inmemLoader)
-            val localElementsField = localPathList.javaClass.getDeclaredField("dexElements")
-            localElementsField.isAccessible = true
-            val localElements = localElementsField.get(localPathList) as Array<*>
-
-            val existingElementsField = pathList.javaClass.getDeclaredField("dexElements")
-            existingElementsField.isAccessible = true
-            val existingElements = existingElementsField.get(pathList) as Array<*>
-
-            val elementType = existingElements.javaClass.componentType
-            val combined = java.lang.reflect.Array.newInstance(elementType, existingElements.size + localElements.size)
-            System.arraycopy(existingElements, 0, combined, 0, existingElements.size)
-            System.arraycopy(localElements, 0, combined, existingElements.size, localElements.size)
-            existingElementsField.set(pathList, combined)
-        } catch (e: Exception) {
-            android.util.Log.w("KlipperApp", "Failed secondary DEX install", e)
-        }
-    }
-
-    private fun readSecondaryDexBytes(apk: File): ByteArray? {
-        val zipFile = java.util.zip.ZipFile(apk)
-        try {
-            val entry = zipFile.getEntry("classes2.dex") ?: return null
-            return zipFile.getInputStream(entry).use { it.readBytes() }
-        } finally {
-            zipFile.close()
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
@@ -109,21 +54,16 @@ class KlipperApp : MultiDexApplication() {
 
         bundleInstallJob = appScope.async(Dispatchers.IO) {
             BundleInstaller.init(this@KlipperApp)
-            if (isMainProcess) {
-                seedChaquopyDirLocked(this@KlipperApp)
-            }
         }
 
         if (!isMainProcess) {
             runBlocking { bundleInstallJob.await() }
-            waitForChaquopySeed()
         }
 
         if (isMainProcess) {
             appScope.launch {
-                runBlocking { bundleInstallJob.await() }
-                waitForChaquopySeed()
-                Log.i("beam_app", "BundleInstaller+seed done, loading instances from DB")
+                bundleInstallJob.await()
+                Log.i("beam_app", "BundleInstaller done, loading instances from DB")
                 val instances = withContext(Dispatchers.IO) {
                     DATABASE.getInstances()
                 }
@@ -133,15 +73,6 @@ class KlipperApp : MultiDexApplication() {
             appScope.launch(Dispatchers.IO) {
                 UsbSerialManager.init(this@KlipperApp)
             }
-        }
-    }
-
-    private fun waitForChaquopySeed() {
-        val marker = File(filesDir, CHAQUOPY_SEED_MARKER)
-        var attempts = 0
-        while (!marker.exists() && attempts < 200) {
-            try { Thread.sleep(50) } catch (_: InterruptedException) { break }
-            attempts++
         }
     }
 

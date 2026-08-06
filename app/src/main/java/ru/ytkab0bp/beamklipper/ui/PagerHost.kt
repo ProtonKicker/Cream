@@ -14,9 +14,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.HelpOutline
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -79,7 +77,7 @@ fun PagerHost(
                 navigationIcon = {
                     if (currentPage != PAGE_SETTINGS) {
                         IconButton(onClick = { scope.launch { pagerState.animateScrollToPage(PAGE_SETTINGS) } }) {
-                            Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.Settings))
+                            Icon(painterResource(R.drawable.ic_settings_outline_28), contentDescription = stringResource(R.string.Settings))
                         }
                     } else {
                         Spacer(Modifier.size(48.dp))
@@ -88,7 +86,7 @@ fun PagerHost(
                 actions = {
                     if (currentPage != PAGE_HELP) {
                         IconButton(onClick = { scope.launch { pagerState.animateScrollToPage(PAGE_HELP) } }) {
-                            Icon(Icons.AutoMirrored.Filled.HelpOutline, contentDescription = stringResource(R.string.HelpTitle))
+                            Icon(painterResource(R.drawable.ic_help_outline_28), contentDescription = stringResource(R.string.HelpTitle))
                         }
                     } else {
                         Spacer(Modifier.size(48.dp))

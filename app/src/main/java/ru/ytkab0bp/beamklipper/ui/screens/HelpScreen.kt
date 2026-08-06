@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -127,7 +125,7 @@ private fun LinkRow(iconRes: Int, title: String, onClick: () -> Unit) {
             modifier = Modifier.weight(1f)
         )
         Icon(
-            Icons.AutoMirrored.Filled.ArrowForwardIos,
+            painterResource(R.drawable.ic_chevron_right_28),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp)

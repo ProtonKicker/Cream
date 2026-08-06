@@ -151,10 +151,30 @@ class CameraService : Service() {
 
                 override fun onOpened(camera: CameraDevice) {
                     try {
+                        var width = Prefs.cameraWidth
+                        var height = Prefs.cameraHeight
+                        val chars = cameraManager.getCameraCharacteristics(camera.id)
+                        val map = chars.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                        val sizes = map?.getOutputSizes(ImageFormat.YUV_420_888) ?: emptyArray()
+                        if (sizes.isNotEmpty()) {
+                            val best = sizes.minByOrNull {
+                                val dw = it.width - width
+                                val dh = it.height - height
+                                dw * dw + dh * dh
+                            }
+                            if (best != null) {
+                                width = best.width
+                                height = best.height
+                            }
+                        }
                         val targets = ArrayList<Surface>()
-                        val reader = ImageReader.newInstance(Prefs.cameraWidth, Prefs.cameraHeight, ImageFormat.YUV_420_888, 10)
+                        val reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 4)
                         reader.setOnImageAvailableListener({ r ->
                             val img = r.acquireLatestImage() ?: return@setOnImageAvailableListener
+                            if (handlerThreads.isEmpty()) {
+                                img.close()
+                                return@setOnImageAvailableListener
+                            }
                             IO_POOL.submit {
                                 val yBuffer = img.planes[0].buffer
                                 val uBuffer = img.planes[1].buffer
@@ -177,7 +197,7 @@ class CameraService : Service() {
 
                                 val yuvImage = YuvImage(buffer, ImageFormat.NV21, img.width, img.height, null)
                                 val conv = ByteArrayOutputStream()
-                                yuvImage.compressToJpeg(Rect(0, 0, img.width, img.height), 100, conv)
+                                yuvImage.compressToJpeg(Rect(0, 0, img.width, img.height), 85, conv)
                                 bufferStack.push(buffer)
 
                                 val converted = conv.toByteArray()
@@ -193,7 +213,6 @@ class CameraService : Service() {
                                 captureSession = session
                                 try {
                                     captureRequestBuilder = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-                                    val chars = cameraManager.getCameraCharacteristics(camera.id)
                                     val rangeArray = chars.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) ?: throw RuntimeException("No FPS ranges")
                                     var selectedRange: Range<Int>? = null
                                     for (r in rangeArray) {

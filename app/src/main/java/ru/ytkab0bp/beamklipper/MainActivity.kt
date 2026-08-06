@@ -146,7 +146,11 @@ class MainActivity : AppCompatActivity() {
                     best?.let { w.attributes = w.attributes.apply { preferredDisplayModeId = it.modeId } }
                 }
             } else {
-                w.attributes = w.attributes.apply { preferredRefreshRate = 144.0f }
+                val d = display ?: return
+                val maxRate = d.supportedRefreshRates.maxOrNull() ?: 60f
+                if (maxRate > 60f) {
+                    w.attributes = w.attributes.apply { preferredRefreshRate = maxRate }
+                }
             }
         }
         runCatching { w.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED) }

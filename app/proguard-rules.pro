@@ -1,21 +1,13 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# EventBus-generated implementations are loaded via Class.forName
+# in EventBus.java:84, so they must not be renamed or removed.
+-keep class ru.ytkab0bp.eventbus.impl.** { *; }
+-keep class * implements ru.ytkab0bp.eventbus.EventBusListenerImpl { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Klippy/Moonraker per-slot services are instantiated via Class.forName
+# in KlipperInstance.kt (KlippyService_<slot> / MoonrakerService_<slot>).
+-keep class ru.ytkab0bp.beamklipper.service.KlippyService_* { *; }
+-keep class ru.ytkab0bp.beamklipper.service.MoonrakerService_* { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Chaquopy runtime classes and the Python bridge.
+-keep class com.chaquo.python.** { *; }
+-keep class ru.ytkab0bp.beamklipper.KlipperApp { *; }

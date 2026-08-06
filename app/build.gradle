@@ -78,8 +78,22 @@ android {
                 src true
             }
         }
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+    }
+
+    flavorDimensions 'abi'
+
+    productFlavors {
+        armv7 {
+            dimension 'abi'
+            ndk {
+                abiFilters 'armeabi-v7a'
+            }
+        }
+        arm64 {
+            dimension 'abi'
+            ndk {
+                abiFilters 'arm64-v8a'
+            }
         }
     }
 
@@ -88,7 +102,8 @@ android {
             signingConfig signingConfigs.release
             buildConfigField "boolean", "IS_GOOGLE_PLAY", "false"
             buildConfigField "String", "COMMIT", "\"" + commit + "\""
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -96,8 +111,6 @@ android {
             buildConfigField "String", "COMMIT", "\"" + commit + "\""
             ndk {
                 debugSymbolLevel 'NONE'
-                //noinspection ChromeOsAbiSupport
-                abiFilters "arm64-v8a"
             }
         }
     }
@@ -136,8 +149,10 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "Cream_" + commit + ".apk"
+        variant.outputs.all { output ->
+            def abi = output.getFilter(com.android.build.OutputFile.ABI)
+            def suffix = abi != null ? abi : variant.flavorName
+            outputFileName = "Cream_" + commit + (suffix ? "_" + suffix : "") + ".apk"
         }
     }
 }
@@ -166,8 +181,6 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.compose.material:material-icons-core'
-    implementation 'androidx.compose.material:material-icons-extended'
     implementation 'androidx.activity:activity-compose:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
@@ -304,54 +317,6 @@ tasks.register('bundleMainsail') {
             versionFile.text = configVersion
         } else {
             throw new IllegalStateException('Failed to download mainsail')
-        }
-    }
-}
-
-tasks.register('bundleKalicoFrontend') {
-    doFirst {
-        var assets = file('src/main/assets')
-        var versionFile = new File(assets, 'kalico_frontend_version')
-        var configVersion = project.property('beam.mainsail_version')
-
-        if (versionFile.exists() && configVersion == versionFile.text.trim()) {
-            return
-        }
-
-        var kalicoDir = new File(assets, 'kalico_frontend')
-        var files = new ArrayList<File>()
-        collectFiles(kalicoDir, files)
-        files.each {
-            it.delete()
-        }
-
-        def con = new URL('https://github.com/mainsail-crew/mainsail/releases/download/' + configVersion + '/mainsail.zip').openConnection() as HttpURLConnection
-        if (con.getResponseCode() == 200) {
-            ZipInputStream zis = new ZipInputStream(con.getInputStream())
-            ZipEntry entry
-            byte[] buf = new byte[10240]
-            int c
-
-            while (entry = zis.getNextEntry()) {
-                File f = new File(kalicoDir, entry.getName())
-                if (entry.isDirectory()) {
-                    f.mkdirs()
-                    continue
-                }
-
-                f.getParentFile().mkdirs()
-                var fos = new FileOutputStream(f)
-
-                while ((c = zis.read(buf)) != -1) {
-                    fos.write(buf, 0, c)
-                }
-                fos.close()
-            }
-            zis.close()
-
-            versionFile.text = configVersion
-        } else {
-            throw new IllegalStateException('Failed to download Kalico frontend bundle')
         }
     }
 }
@@ -555,4 +520,3 @@ tasks.register('bundleKlipper') {
 tasks.getByName('preBuild').dependsOn('bundleKlipper')
 tasks.getByName('preBuild').dependsOn('bundleFluidd')
 tasks.getByName('preBuild').dependsOn('bundleMainsail')
-tasks.getByName('preBuild').dependsOn('bundleKalicoFrontend')

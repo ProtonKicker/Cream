@@ -29,14 +29,14 @@ object AppState {
     private fun <T, M : MutableStateFlow<T>> M.distinct(): StateFlow<T> = this
         .let { src -> kotlinx.coroutines.flow.flow<T> { src.collect { emit(it) } } }
         .distinctUntilChanged()
-        .stateIn(scope, SharingStarted.Eagerly, this.value)
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), this.value)
 
     private inline fun <T, M : MutableStateFlow<T>> M.distinct(
         crossinline areEquivalent: (a: T, b: T) -> Boolean
     ): StateFlow<T> = this
         .let { src -> kotlinx.coroutines.flow.flow<T> { src.collect { emit(it) } } }
         .distinctUntilChanged { a, b -> areEquivalent(a, b) }
-        .stateIn(scope, SharingStarted.Eagerly, this.value)
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), this.value)
 
     private val _instances = MutableStateFlow<List<KlipperInstance>>(emptyList())
     val instances: StateFlow<List<KlipperInstance>> = _instances.distinct { a, b ->
