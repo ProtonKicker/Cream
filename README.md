@@ -2,12 +2,45 @@
 
 **Read this in other languages: [English](README.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)**
 
-Kream is a hardfork of [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper), which was originally created by [ProtonKicker](https://github.com/ProtonKicker). Kream allows you to run [Klipper](https://github.com/KevinOConnor/klipper) host software (Klippy) on any Android 5.0+ device with OTG support.
+Kream is a Kotlin rewrite of [Beam Klipper](https://github.com/utkabobr/BeamKlipper), originally created by [ProtonKicker](https://github.com/ProtonKicker). Kream allows you to run [Klipper](https://github.com/KevinOConnor/klipper) or [Kalico](https://github.com/KalicoDTU/kalico) host software on any Android 5.0+ device with OTG support.
 
-# Quick start
+## Why Kream?
+
+Kream is a complete overhaul of Beam Klipper with three major improvements:
+
+### 1. Kotlin Rewrite
+The entire application has been migrated from Java to Kotlin, bringing:
+- **Null safety** — compile-time prevention of NullPointerExceptions
+- **Coroutines** — automatic cleanup of background threads, no more leaks
+- **Immutable data classes** — thread-safe event bus messages and database entities
+- **Smart casts & exhaustiveness checks** — bugs caught at compile time, not runtime
+
+### 2. Dramatically Smaller Size
+Kream is significantly smaller than the original Beam Klipper (138 MB → ~36 MB):
+
+| Component | Beam Klipper | Kream |
+|-----------|-------------|-------|
+| FFmpeg timelapse | Bundled binary (~40 MB) | Android MediaCodec API (built-in) |
+| App size (arm64) | ~138 MB | ~36 MB |
+
+The FFmpeg timelapse component was replaced with Android's native MediaCodec API, saving ~40 MB per architecture.
+
+### 3. Brand New UI
+Kream features a complete UI redesign with:
+- Brutalist bento-box aesthetic with "Paper/Honey/Ink" color palette
+- Hard offset shadows and bold borders
+- Modern Jetpack Compose implementation
+- Improved layout and usability
+
+### Additional Features
+- **10 concurrent instances** — run up to 10 printer profiles simultaneously (vs. 4 in Beam Klipper)
+- **Dual firmware support** — run Klipper or Kalico firmware engines
+- **Native timelapse** — uses Android's hardware MediaCodec instead of bundled FFmpeg
+
+# Quick Start
 
 1. Download & install firmware.bin from [here](https://github.com/utkabobr/klipper/tree/prebuilt-v0.12.0) (or build your own from [this repo](https://github.com/utkabobr/klipper) to ensure versions compatibility)
-2. Install APK from [Releases tab](https://github.com/ProtonKicker/Kream/releases/latest)
+2. Install APK from [Releases tab](https://github.com/ProtonKicker/Cream/releases/latest)
 3. Allow all the permissions required
 4. Add printer instance (Click generic-***.cfg if your printer is not available)
 5. Click start
@@ -37,6 +70,7 @@ Recommended camera config is mjpeg-**stream** (Not adaptive mjpeg) for Fluidd an
 
 Kream bundles:
 - [Klipper](https://github.com/KevinOConnor/klipper)
+- [Kalico](https://github.com/KalicoDTU/kalico)
 - [Moonraker](https://github.com/Arksine/moonraker)
 - [Fluidd](https://github.com/fluidd-core/fluidd)
 - [Mainsail](https://github.com/mainsail-crew/mainsail)
@@ -44,7 +78,7 @@ Kream bundles:
 - [Klipper TMC Autotune](https://github.com/andrewmcgr/klipper_tmc_autotune)
 - [Moonraker-timelapse](https://github.com/mainsail-crew/moonraker-timelapse)
 
-# Android extensions
+# Android Extensions
 
 Kream provides additional extensions to control some built-in features.
 
@@ -68,23 +102,22 @@ You can put the app to autostart by setting needed printers to autostart **AND**
 
 You **must** remove lockscreen pincode if your device is encrypted (Enabled by default on most devices)
 
-# Background activity notice
+# Background Activity Notice
 
 Some manufacturers may restrict app's performance or background process.
 You can circumvent this by setting app as default launcher and allowing all the background tasks
 
-# Android TV support?
+# Android TV Support?
 
 Yup. Should be working just fine. But please note that some cheap TV boxes does not support setting Kream as launcher without disabling system one first, use ADB or root to disable it.
 
-# What USB hub to use?
+# What USB Hub to Use?
 
 I'm using UGREEN Type-c hub (Not affiliated, but I'm waiting for your request UGREEN :D), but any should be fine if it works with your device and provides charging at the same time
 
 # Restrictions
 
 - Web server can't run on default port because Android/linux doesn't allow user-space apps to bind to ports less than 1024 and we want 80 for default `http://IP`
-- Only up to 4 instances can be running at the same time because Android requires developer to declare each service with different process individually. Idk if someone will use more than that anyway ¯\\\_(ツ)\_/¯
 - Some devices may reset device path on firmware restart, you should use VID/PID naming in that case
 - No SSH (You won't be able to build firmware or run additional autorun services anyway)
 - Some devices doesn't support OTG and charging at the same time, you must solder directly to the battery pins in that case (Or use different device, it's up to you)
@@ -97,4 +130,4 @@ I'm using UGREEN Type-c hub (Not affiliated, but I'm waiting for your request UG
 
 # Contributing
 
-Pull requests are welcome, but I will **NOT** approve Kotlin source code as I don't use it in my projects
+Pull requests are welcome!

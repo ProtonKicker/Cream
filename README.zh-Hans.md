@@ -1,26 +1,50 @@
 # Kream - Android 上的 Klipper / Kalico
 
-Kream 是一个 Android 端的 Klipper / Kalico 宿主机应用，可以让你在任意一台支持 OTG 的 Android 5.0+ 设备上运行 [Klipper](https://github.com/KevinOConnor/klipper)（或 [Kalico](https://github.com/KalicoCrew/kalico)）宿主机软件（Klippy）。
+Kream 是 [Beam Klipper](https://github.com/utkabobr/BeamKlipper) 的 Kotlin 重写版，最初由 [ProtonKicker](https://github.com/ProtonKicker) 创建。Kream 可以让你在任何支持 OTG 的 Android 5.0+ 设备上运行 [Klipper](https://github.com/KevinOConnor/klipper) 或 [Kalico](https://github.com/KalicoDTU/kalico) 主机软件（Klippy）。
 
-Kream 是 [Cream](https://github.com/ProtonKicker/Cream) 的继任者，而 Cream 则是 [Beam Klipper](https://github.com/ProtonKicker/BeamKlipper) 的硬分叉。Beam Klipper 最初由 [ProtonKicker](https://github.com/ProtonKicker) 创建。主要变化包括：
+## 为什么选择 Kream？
 
-- **全量 Kotlin 迁移**：核心应用包（`ru.ytkab0bp.beamklipper`）已从 Java 迁移到 Kotlin（71 个 Kotlin 源文件取代 34 个 Java 文件）。借助空安全、协程、不可变数据类等语言特性，消除了大量只能在运行时发现的崩溃类型，显著提升稳定性。详见 [KOTLIN_MIGRATION.md](KOTLIN_MIGRATION.md)。
-- **内置 Kalico 引擎**：捆绑 [Kalico](https://github.com/KalicoCrew/kalico)（Klipper 的社区维护分支），可在设置中一键切换 Klipper / Kalico 固件引擎，无需重新安装。
-- **UI 全面升级**：全新的「奶油」主题界面，重新设计的启动/停止按钮、设置面板、实例卡片与 Web 快捷卡片。
-- **多语言支持**：内置简体中文、繁体中文、英语与俄语，并支持跟随系统。
+Kream 是 Beam Klipper 的全面升级，包含三大改进：
+
+### 1. Kotlin 重写
+整个应用已从 Java 迁移到 Kotlin，带来：
+- **空安全** — 编译时防止 NullPointerException
+- **协程** — 自动清理后台线程，无泄漏
+- **不可变数据类** — 线程安全的事件总线消息和数据库实体
+- **智能转换和穷举检查** — Bug 在编译时捕获，而非运行时
+
+### 2. 体积大幅减小
+Kream 比原始 Beam Klipper 小很多（138 MB → 约 36 MB）：
+
+| 组件 | Beam Klipper | Kream |
+|------|-------------|-------|
+| FFmpeg 延时摄影 | 捆绑二进制文件（约 40 MB） | Android MediaCodec API（内置） |
+| 应用大小（arm64） | 约 138 MB | 约 36 MB |
+
+FFmpeg 延时摄影组件已被 Android 原生 MediaCodec API 取代，每个架构节省约 40 MB。
+
+### 3. 全新的 UI
+Kream 具有完全的 UI 重新设计：
+- 粗野主义 Bento 风格，「纸/蜜/墨」配色
+- 硬质偏移阴影和粗边框
+- 现代 Jetpack Compose 实现
+- 改进的布局和可用性
+
+### 额外功能
+- **10 个并发实例** — 同时运行最多 10 个打印机配置文件（对比 Beam Klipper 的 4 个）
+- **双固件支持** — 运行 Klipper 或 Kalico 固件引擎
+- **原生延时摄影** — 使用 Android 硬件 MediaCodec 而非捆绑 FFmpeg
 
 # 快速开始
 
 1. 从[这里](https://github.com/utkabobr/klipper/tree/prebuilt-v0.12.0)下载并安装 `firmware.bin`（或从[此仓库](https://github.com/utkabobr/klipper)自行构建以确保版本兼容）
-2. 从 [Releases 页面](https://github.com/ProtonKicker/Kream/releases/latest) 安装 APK
+2. 从 [Releases 页面](https://github.com/ProtonKicker/Cream/releases/latest) 安装 APK
 3. 允许所有需要的权限
 4. 添加打印机实例（列表中没有你的打印机时，选择 generic-***.cfg）
 5. 点击启动按钮
 6. 访问 Web 服务器地址 `http://IP:8888/`
 7. 在 Web 编辑器的「设备」标签页中配置串口（单打印机设置下会自动配置）
 8. 大功告成！
-
-> 提示：若要使用 Kalico 引擎，请在「设置 → 引擎与界面」中把固件引擎切换为 Kalico，并使用 Kalico 固件树为你的主控板编译对应固件。
 
 # 安装 Kream 之后，设备还能当普通设备用吗？
 
@@ -44,7 +68,7 @@ Fluidd 推荐使用 mjpeg-**stream**（非 adaptive mjpeg）摄像头配置，Ma
 
 Kream 内置了：
 - [Klipper](https://github.com/KevinOConnor/klipper)
-- [Kalico](https://github.com/KalicoCrew/kalico)
+- [Kalico](https://github.com/KalicoDTU/kalico)
 - [Moonraker](https://github.com/Arksine/moonraker)
 - [Fluidd](https://github.com/fluidd-core/fluidd)
 - [Mainsail](https://github.com/mainsail-crew/mainsail)
@@ -58,7 +82,7 @@ Kream 提供了一些附加扩展，用于控制内置功能。
 
 ### 摄像头
 
-在 printer.cfg 中加入 `[beam_camera]`
+在 printer.cfg 中加入 `[kream_camera]`
 
 `SET_CAMERA_FLASHLIGHT ENABLED=true/false` - 开关闪光灯
 
@@ -66,9 +90,9 @@ Kream 提供了一些附加扩展，用于控制内置功能。
 
 ### 蜂鸣器
 
-在 printer.cfg 中加入 `[include beam_beeper.cfg]`
+在 printer.cfg 中加入 `[include kream_beeper.cfg]`
 
-使用 [文档中定义](https://marlinfw.org/docs/gcode/M300.html) 的 `M300` 宏。
+使用[文档中定义](https://marlinfw.org/docs/gcode/M300.html)的 `M300` 宏。
 
 # 自动启动
 
@@ -83,16 +107,15 @@ Kream 提供了一些附加扩展，用于控制内置功能。
 
 # 支持 Android TV 吗？
 
-支持，应该可以正常工作。但请注意，部分廉价电视盒子不支持直接设置 Kream 为桌面，需要先用 ADB 或 root 禁用系统桌面。
+支持，应该可以正常工作。但请注意，部分廉价电视盒子不支持直接将 Kream 设为桌面，需要先用 ADB 或 root 禁用系统桌面。
 
 # 用哪种 USB 集线器？
 
-作者使用的是绿联（UGREEN）Type-C 集线器（非广告，只是在等绿联来合作:D），只要能同时充电且与你的设备兼容，任何集线器都可以。
+作者使用的是绿联（UGREEN）Type-C 集线器（非广告，只是在等绿联来合作 :D），只要能同时充电且与你的设备兼容，任何集线器都可以。
 
 # 限制
 
 - Web 服务器无法使用默认端口，因为 Android/Linux 不允许用户空间应用绑定 1024 以下的端口，而默认的 `http://IP` 需要 80 端口
-- 同时最多只能运行 4 个实例，因为 Android 要求开发者为每个服务单独声明不同的进程（应该也没人需要更多吧 ¯\\\_(ツ)\_/¯）
 - 部分设备在固件重启后会重置设备路径，这种情况下请使用 VID/PID 命名
 - 不支持 SSH（也因此无法在设备上编译固件或运行额外的自启服务）
 - 部分设备不支持同时 OTG 和充电，这种情况只能直接焊接到电池引脚（或者换一台设备，随你）
@@ -105,4 +128,4 @@ Kream 提供了一些附加扩展，用于控制内置功能。
 
 # 贡献
 
-欢迎提交 Pull Request。Kream 已经全面转向 Kotlin，新代码请使用 Kotlin 编写。
+欢迎提交 Pull Request！
