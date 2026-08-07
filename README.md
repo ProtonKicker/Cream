@@ -36,6 +36,21 @@ Kream features a complete UI redesign with:
 - **10 concurrent instances** — run up to 10 printer profiles simultaneously (vs. 4 in Beam Klipper)
 - **Dual firmware support** — run Klipper or Kalico firmware engines
 - **Native timelapse** — uses Android's hardware MediaCodec instead of bundled FFmpeg
+- **Local-only operation** — no cloud connectivity; all data stays on your device (Beam Cloud support removed)
+
+## Choosing the Right Package
+
+Kream provides two APK variants:
+
+| Architecture | Package Name | Use Case |
+|-------------|--------------|----------|
+| arm64 | `Cream_*_arm64.apk` | Modern 64-bit devices (recommended) |
+| armv7 | `Cream_*_armv7.apk` | Older 32-bit devices |
+
+**How to check your device architecture:**
+- **Settings > About Phone > Architecture** or **Kernel Architecture**
+- Or install a CPU info app like "CPU-Z" or "AIDA64"
+- If unsure, try arm64 first — most devices released after 2015 support it
 
 # Quick Start
 

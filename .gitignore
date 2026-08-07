@@ -24,3 +24,6 @@ local.properties
 
 # Keystore
 beamklipper.keystore
+
+# Local reference (not for publication)
+BeamKlipper-master/

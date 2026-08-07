@@ -186,6 +186,11 @@ class KlipperInstance {
 
         if (state == State.IDLE) {
             slots.remove(this)
+            for (entry in slots.keys.toList()) {
+                if (entry.id == this.id) {
+                    slots.remove(entry)
+                }
+            }
             mainHandler.post { stopServerServicesIfNoSlots() }
         } else if (state == State.RUNNING) {
             mainHandler.post {
@@ -343,10 +348,12 @@ class KlipperInstance {
         }
 
         private fun stopServerServicesIfNoSlots() {
-            val slotCount = slots.size
-            val hasRunning = hasAnyRunningInstance()
-            Log.d(TAG, "stopServerServicesIfNoSlots: slots.size=$slotCount, hasAnyRunning=$hasRunning")
-            if (hasAnyRunningInstance()) return
+            Log.d(TAG, "stopServerServicesIfNoSlots: slots.size=${slots.size}, hasRunning=${hasAnyRunningInstance()}, webConn=${webServerConnection != null}")
+            if (hasAnyRunningInstance()) {
+                Log.d(TAG, "stopServerServicesIfNoSlots: returning early due to running instances")
+                return
+            }
+            Log.d(TAG, "stopServerServicesIfNoSlots: proceeding to stop services")
             slots.clear()
             if (webServerConnection != null) {
                 KlipperApp.EVENT_BUS.fireEvent(WebStateChangedEvent(ru.ytkab0bp.beamklipper.KlipperInstance.State.STOPPING))
@@ -376,6 +383,14 @@ class KlipperInstance {
                     cameraServerConnection = null
                 }
             }
+        }
+
+        @JvmStatic
+        fun resetSlotsForFreshStart() {
+            Log.i(TAG, "resetSlotsForFreshStart: clearing slots (was size=${slots.size}), webServerConnection=${webServerConnection != null}, cameraServerConnection=${cameraServerConnection != null}")
+            slots.clear()
+            webServerConnection = null
+            cameraServerConnection = null
         }
     }
 }

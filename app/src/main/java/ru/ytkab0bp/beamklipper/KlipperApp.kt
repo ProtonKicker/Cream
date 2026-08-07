@@ -63,6 +63,7 @@ class KlipperApp : MultiDexApplication() {
             appScope.launch {
                 bundleInstallJob.await()
                 Log.i("beam_app", "BundleInstaller done, loading instances from DB")
+                KlipperInstance.resetSlotsForFreshStart()
                 val instances = withContext(Dispatchers.IO) {
                     DATABASE.getInstances()
                 }
