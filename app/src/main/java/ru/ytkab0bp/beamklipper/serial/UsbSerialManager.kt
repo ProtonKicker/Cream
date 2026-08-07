@@ -125,7 +125,7 @@ object UsbSerialManager {
                     KlipperApp.INSTANCE,
                     0,
                     Intent(ACTION_ON_DEVICE_CONNECTED).setPackage(KlipperApp.INSTANCE.packageName),
-                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_NO_CREATE
+                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
             )
             return

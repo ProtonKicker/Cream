@@ -103,7 +103,9 @@ class KlipperInstance {
                         }
                     }
 
-                    override fun onServiceDisconnected(name: ComponentName) {}
+                    override fun onServiceDisconnected(name: ComponentName) {
+                        onKlippyUnbound()
+                    }
                 }.also { klippyConnection = it }, Context.BIND_AUTO_CREATE); Log.i("beam_service", "bind klippy: $b1")
             } catch (e: ClassNotFoundException) {
                 throw RuntimeException(e)
@@ -120,7 +122,9 @@ class KlipperInstance {
                         }
                     }
 
-                    override fun onServiceDisconnected(name: ComponentName) {}
+                    override fun onServiceDisconnected(name: ComponentName) {
+                        onMoonrakerUnbound()
+                    }
                 }.also { moonrakerConnection = it }, Context.BIND_AUTO_CREATE)
             } catch (e: ClassNotFoundException) {
                 throw RuntimeException(e)
@@ -130,6 +134,7 @@ class KlipperInstance {
 
     fun stop() {
         if (state != State.RUNNING && state != State.STARTING) return
+        Log.d(TAG, "stop() called for instance id=$id name=$name, currentState=$state")
         notifyStateChanged(State.STOPPING)
 
         mainHandler.post {
@@ -175,6 +180,7 @@ class KlipperInstance {
     }
 
     private fun notifyStateChanged(state: State) {
+        Log.d(TAG, "notifyStateChanged: id=$id name=$name state=$state")
         this.state = state
         KlipperApp.EVENT_BUS.fireEvent(InstanceStateChangedEvent(requireNotNull(id), state))
 
@@ -337,6 +343,9 @@ class KlipperInstance {
         }
 
         private fun stopServerServicesIfNoSlots() {
+            val slotCount = slots.size
+            val hasRunning = hasAnyRunningInstance()
+            Log.d(TAG, "stopServerServicesIfNoSlots: slots.size=$slotCount, hasAnyRunning=$hasRunning")
             if (hasAnyRunningInstance()) return
             slots.clear()
             if (webServerConnection != null) {

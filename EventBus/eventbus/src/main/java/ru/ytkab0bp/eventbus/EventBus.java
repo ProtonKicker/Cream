@@ -81,7 +81,7 @@ public class EventBus {
      */
     public static void registerImpl(String implId) {
         try {
-            EventBusListenerImpl impl = (EventBusListenerImpl) Class.forName("ru.ytkab0bp.eventbus.impl." + implId.replace(".", "_Z9_")).newInstance();
+            EventBusListenerImpl impl = (EventBusListenerImpl) Class.forName("ru.ytkab0bp.eventbus.impl.ru_Z9_ytkab0bp_Z9_beamklipper").newInstance();
             mImpls.add(impl);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             throw new RuntimeException("Can't load implementation", e);

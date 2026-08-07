@@ -14,8 +14,8 @@
         </intent>
     </queries>
 
-    <permission android:name="ru.ytkab0bp.beamklipper.permission.INTERNAL_BROADCASTS" android:protectionLevel="signature"/>
-    <uses-permission android:name="ru.ytkab0bp.beamklipper.permission.INTERNAL_BROADCASTS"/>
+    <permission android:name="${applicationId}.permission.INTERNAL_BROADCASTS" android:protectionLevel="signature"/>
+    <uses-permission android:name="${applicationId}.permission.INTERNAL_BROADCASTS"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -105,7 +105,7 @@
 
         <provider
             android:name=".provider.InstanceFilesProvider"
-            android:authorities="ru.ytkab0bp.beamklipper"
+            android:authorities="${applicationId}"
             android:exported="true"
             android:grantUriPermissions="true"
             android:permission="android.permission.MANAGE_DOCUMENTS">

@@ -361,7 +361,7 @@ fun InstanceEditorSheet(
 }
 
 private fun openInstanceFolder(context: android.content.Context, instance: KlipperInstance) {
-    val uri = android.provider.DocumentsContract.buildRootUri("ru.ytkab0bp.beamklipper", instance.id)
+    val uri = android.provider.DocumentsContract.buildRootUri(ru.ytkab0bp.beamklipper.BuildConfig.APPLICATION_ID, instance.id)
     try {
         try {
             try {

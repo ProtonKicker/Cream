@@ -572,8 +572,9 @@ class WebService : Service() {
             val m = API_PATTERN.matcher(session.uri)
             if (m.find()) {
                 try {
-                    val con = URL("http://127.0.0.1:${getMoonrakerPort()}/${session.uri.substring(1)}?${session.queryParameterString}")
-                        .openConnection() as HttpURLConnection
+                    val qs = session.queryParameterString
+                    val urlStr = "http://127.0.0.1:${getMoonrakerPort()}/${session.uri.substring(1)}" + if (qs.isNullOrEmpty()) "" else "?$qs"
+                    val con = URL(urlStr).openConnection() as HttpURLConnection
                     con.requestMethod = session.method.name
                     if (session.method == Method.POST || session.method == Method.PUT || session.method == Method.PATCH) {
                         for ((key, value) in session.headers) {
@@ -587,7 +588,12 @@ class WebService : Service() {
                         }
                     }
                     val responseStream = if (con.responseCode in 200..299) con.inputStream else con.errorStream
-                    val r = Response.newChunkedResponse(Status.OK, con.contentType, responseStream)
+                    val resStatus = Status.lookup(con.responseCode) 
+                        ?: object : org.nanohttpd.protocols.http.response.IStatus {
+                            override fun getDescription(): String = con.responseMessage ?: "Unknown"
+                            override fun getRequestStatus(): Int = con.responseCode
+                        }
+                    val r = Response.newChunkedResponse(resStatus, con.contentType, responseStream)
                     for ((key, values) in con.headerFields) {
                         for (value in values) {
                             r.addHeader(key, value)
@@ -610,43 +616,83 @@ class WebService : Service() {
         override fun openWebSocket(handshake: IHTTPSession): WebSocket? {
             return try {
                 val localRef = AtomicReference<WebSocket>()
-                val remote: WebSocketClient = object : WebSocketClient(URI("ws://127.0.0.1:${getMoonrakerPort()}/websocket?${handshake.queryParameterString}")) {
+                val qs = handshake.queryParameterString
+                val uriStr = "ws://127.0.0.1:${getMoonrakerPort()}/websocket" + if (qs.isNullOrEmpty()) "" else "?$qs"
+                
+                val remoteClient = object : WebSocketClient(URI(uriStr)) {
                     override fun onOpen(handshakedata: ServerHandshake) {}
                     override fun onMessage(message: String) {
-                        if (!localRef.get().isOpen) { close(); return }
-                        try { localRef.get().send(message) } catch (e: IOException) { onError(e) }
+                        val local = localRef.get()
+                        if (local != null && local.isOpen) {
+                            try { local.send(message) } catch (e: IOException) { onError(e) }
+                        } else {
+                            Log.e("websocket_proxy", "remoteClient.onMessage(String): local=$local isOpen=${local?.isOpen}. message=$message. Closing remote!")
+                            close()
+                        }
                     }
                     override fun onMessage(bytes: ByteBuffer) {
-                        try { localRef.get().send(bytes.array()) } catch (e: IOException) { onError(e) }
+                        val local = localRef.get()
+                        if (local != null && local.isOpen) {
+                            try { local.send(bytes.array()) } catch (e: IOException) { onError(e) }
+                        } else {
+                            Log.e("websocket_proxy", "remoteClient.onMessage(bytes): local=$local isOpen=${local?.isOpen}. Closing remote!")
+                            close()
+                        }
                     }
                     override fun onClose(code: Int, reason: String, remote: Boolean) {
-                        if (!remote) {
-                            try { localRef.get().close(CloseCode.NormalClosure, reason, false) } catch (e: IOException) { throw RuntimeException(e) }
+                        Log.d("websocket_proxy", "remoteClient.onClose: code=$code reason=$reason remote=$remote")
+                        val local = localRef.get()
+                        if (local != null && local.isOpen) {
+                            try { local.close(CloseCode.NormalClosure, reason ?: "", false) } catch (e: IOException) {}
                         }
                     }
                     override fun onError(ex: Exception) {
                         Log.e("websocket_proxy", "Remote socket error", ex)
+                        val local = localRef.get()
+                        if (local != null && local.isOpen) {
+                            try { local.close(CloseCode.InternalServerError, ex.message ?: "Error", false) } catch (e: IOException) {}
+                        }
                     }
                 }
-                val local: WebSocket = object : WebSocket(handshake) {
+                val local = object : WebSocket(handshake) {
                     override fun onOpen() {
-                        try { remote.connectBlocking() } catch (e: InterruptedException) { onException(IOException(e)) }
+                        Log.d("websocket_proxy", "Local socket opened, connecting to remote...")
+                        try { 
+                            if (!remoteClient.connectBlocking()) {
+                                Log.e("websocket_proxy", "remoteClient.connectBlocking() returned false")
+                                close(CloseCode.InternalServerError, "Failed to connect to Moonraker", false)
+                            } else {
+                                Log.d("websocket_proxy", "Connected to remote Moonraker!")
+                            }
+                        } catch (e: InterruptedException) { 
+                            Log.e("websocket_proxy", "Interrupted during connectBlocking", e)
+                            try { close(CloseCode.InternalServerError, "Interrupted", false) } catch (ex: IOException) {}
+                        }
                     }
                     override fun onClose(code: CloseCode, reason: String, initiatedByRemote: Boolean) {
-                        if (!initiatedByRemote) remote.close()
+                        Log.d("websocket_proxy", "local.onClose: code=$code reason=$reason initiatedByRemote=$initiatedByRemote")
+                        if (remoteClient.isOpen) {
+                            remoteClient.close()
+                        }
                     }
                     override fun onMessage(message: WebSocketFrame) {
-                        if (!remote.isOpen) {
-                            try { close(CloseCode.NormalClosure, "", false) } catch (e: IOException) { onException(e) }
+                        if (!remoteClient.isOpen) {
+                            try { close(CloseCode.NormalClosure, "", false) } catch (e: IOException) {}
                             return
                         }
-                        if (message.opCode == OpCode.Text) remote.send(message.textPayload)
-                        else remote.send(message.binaryPayload)
+                        if (message.opCode == OpCode.Text) {
+                            remoteClient.send(message.textPayload)
+                        } else {
+                            remoteClient.send(message.binaryPayload)
+                        }
                     }
                     override fun onPong(pong: WebSocketFrame) {}
                     override fun onException(exception: IOException) {
                         if (exception is SocketTimeoutException) return
                         Log.e("websocket_proxy", "Local socket error", exception)
+                        if (remoteClient.isOpen) {
+                            remoteClient.close()
+                        }
                     }
                 }
                 localRef.set(local)
